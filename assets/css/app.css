@@ -1,0 +1,16 @@
+.text-primary{
+    color: #679A07;
+}
+
+.header-table{
+    color: #0591e2 !important;
+}
+
+.header-table-2{
+    background-color: #679A07 !important;
+    border-color: #679A07 !important;
+}
+
+.material-icons.md-18 { 
+	font-size: 18px; 
+}

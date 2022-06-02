@@ -1,0 +1,43 @@
+/*Configuraciones generales de la aplicación web: imagen de fondo svg, tamaño de la fuente de letra, colores*/
+body{
+    background-image: url("/svg/background.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.material-icons.md-18 { 
+	font-size: 18px; 
+}
+
+.dropdown-item:focus, .dropdown-item:active, .dropdown-item:hover{
+    background-color: #679A07 !important;
+}
+
+.custom-select:focus, .custom-select:active, .custom-select:hover{
+        border-color: #679A07;  box-shadow: none; -webkit-box-shadow: none;
+}
+
+.text-primary{
+    color: #679A07;
+}
+
+/*Colores de los botones de new, edit, delete, además de las líneas y del nav*/
+.header-nav{
+    background-color: #679A07 !important;
+    border-color: #679A07 !important;
+}
+
+.button-color{
+    background-color: #679A07 !important;
+    border-color: #679A07 !important;
+}
+.line-setting{
+    background-color: #679A07 !important;
+    padding: 0px 5px;
+}
+
+/*Configuraciones de las tablas*/
+.header-table-color{
+    background-color: #679A07 !important;
+    border-color: #679A07 !important;
+}

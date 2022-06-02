@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listado de Reservas{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="table-responsive-sm justify-content-center mt-5 table-borderless">
+            <div class="row mb-5">
+                <div class="col-auto" style="padding-top: 10px">
+                    <legend class="verde-t mb4 h3">Reservas confirmadas</legend>
+                </div>
+                <div class="col">
+                    <a href="{{ path('app_reserva_new') }}" class="btn button-color text-white float-right" title="Crear una reserva en el sistema">Crear nueva</a>
+                </div>
+                <div class="col-12 mt-sm-n2 mt-md-n2 mt-lg-n3" >
+                    <hr class="line-setting">
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class ="header-table-color text-white">
+                        <th>Localizador</th>
+                        <th>Habitaciones</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Finalización</th>
+                        <th>Cliente</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reserva in reservas %}
+                        <tr>
+                            <td>{{ reserva.localizador }}</td>
+                            <td>{{ reserva.getHabitaciones()[0].Descripcion }}</td>
+                            <td>{{ reserva.fechaInicio ? reserva.fechaInicio|date('d-m-Y') : '' }}</td>
+                            <td>{{ reserva.fechaFin ? reserva.fechaFin|date('d-m-Y') : '' }}</td>
+                            <td>{{ reserva.getCliente().nombre }}</td>
+                            <td class="p-1 align-middle">
+                                <div>
+                                    <a href="{{ path('app_reserva_show', {'id': reserva.id}) }}" class="btn btn-sm button-color text-white" 
+                                        data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                                        <i class="material-icons mic">visibility</i>
+                                    </a>
+                                    <a href="{{ path('app_reserva_edit', {'id': reserva.id}) }}" class="btn btn-sm button-color text-white" 
+                                        data-toggle="tooltip" data-placement="bottom" title="Editar">
+                                        <i class="material-icons mic">edit</i>
+                                    </a>
+                                    <span data-toggle="modal" data-target="#confirmDeletion">
+                                        <button id="delete-button-0" class="btn btn-sm button-color text-white" data-toggle="tooltip" 
+                                            data-placement="bottom" title="Borrar" onclick="actionSwitch('https://');">
+                                            <i class="material-icons mic">delete</i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No hay reservas para ver.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

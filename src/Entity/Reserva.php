@@ -31,6 +31,9 @@ class Reserva
     #[ORM\ManyToMany(targetEntity: Habitacion::class, inversedBy: 'reservas')]
     private $habitaciones;
 
+    #[ORM\Column(type: 'string', length: 12)]
+    private $localizador;
+
     public function __construct()
     {
         $this->habitaciones = new ArrayCollection();
@@ -109,6 +112,23 @@ class Reserva
     public function removeHabitacione(Habitacion $habitacione): self
     {
         $this->habitaciones->removeElement($habitacione);
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName(); 
+    }
+
+    public function getLocalizador(): ?string
+    {
+        return $this->localizador;
+    }
+
+    public function setLocalizador(string $localizador): self
+    {
+        $this->localizador = $localizador;
 
         return $this;
     }
