@@ -9,15 +9,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/habitacion')]
 class HabitacionController extends AbstractController
 {
     #[Route('/', name: 'app_habitacion_index', methods: ['GET'])]
-    public function index(HabitacionRepository $habitacionRepository): Response
+    public function index(HabitacionRepository $habitacionRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $query = $habitacionRepository->getAllRooms();
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10 /*límite de registros por página*/
+        );
         return $this->render('habitacion/index.html.twig', [
-            'habitacions' => $habitacionRepository->findAll(),
+            'habitaciones' => $pagination
         ]);
     }
 

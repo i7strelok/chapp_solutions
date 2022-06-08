@@ -20,10 +20,10 @@ class ClienteController extends AbstractController
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            10 /*limite de registros por página*/
+            10 /*límite de registros por página*/
         );
         return $this->render('cliente/index.html.twig', [
-            'pagination' => $pagination
+            'clientes' => $pagination
         ]);
     }
 

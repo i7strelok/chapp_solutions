@@ -43,7 +43,7 @@
                                     </a>
                                     <span data-toggle="modal" data-target="#confirmDeletion">
                                         <button id="delete-button-0" class="btn button-color btn-xs text-white" data-toggle="tooltip" 
-                                            data-placement="bottom" title="Borrar" onclick="actionSwitch('{{ path('app_etiqueta_delete', {'etiqueta_id': etiqueta.id}) }}');">
+                                            data-placement="bottom" title="Borrar" onclick="actionSwitch('');">
                                             <i class="material-icons mic">delete</i>
                                         </button>
                                     </span>
@@ -57,6 +57,12 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {# display navigation #}
+            <div class="d-flex justify-content-center">
+                <div class="navigation">
+                    {{ knp_pagination_render(etiquetas) }}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -9,15 +9,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/reserva')]
 class ReservaController extends AbstractController
 {
     #[Route('/', name: 'app_reserva_index', methods: ['GET'])]
-    public function index(ReservaRepository $reservaRepository): Response
+    public function index(ReservaRepository $reservaRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $query = $reservaRepository->getAllBookings();
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10 /*límite de registros por página*/
+        );
         return $this->render('reserva/index.html.twig', [
-            'reservas' => $reservaRepository->findAll(),
+            'reservas' => $pagination
         ]);
     }
 

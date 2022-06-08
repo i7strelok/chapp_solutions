@@ -28,12 +28,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for habitacion in habitacions %}
+                    {% for habitacion in habitaciones %}
                         <tr>
                             <td>{{ habitacion.id }}</td>
                             <td>{{ habitacion.numero}}</td>
                             <td>{{ habitacion.capacidad}}</td>
-                            <td>{{ habitacion.precioDiario }}</td>
+                            <td>{{ habitacion.precio_diario }}</td>
                             <td>{{ habitacion.descripcion ? habitacion.descripcion : '' }}</td>
                             <td class="p-1 align-middle">
                                 <div>
@@ -61,6 +61,12 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {# display navigation #}
+            <div class="d-flex justify-content-center">
+                <div class="navigation">
+                    {{ knp_pagination_render(habitaciones) }}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

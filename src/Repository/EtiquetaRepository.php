@@ -39,6 +39,14 @@ class EtiquetaRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAllLabels(){
+        return $this->getEntityManager()
+        ->createQuery('
+            SELECT etiqueta.id, etiqueta.nombre, etiqueta.descripcion
+            FROM App:Etiqueta etiqueta
+        ');
+    }
+
 //    /**
 //     * @return Etiqueta[] Returns an array of Etiqueta objects
 //     */

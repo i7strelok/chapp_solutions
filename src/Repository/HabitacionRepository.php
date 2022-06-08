@@ -39,6 +39,14 @@ class HabitacionRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAllRooms(){
+        return $this->getEntityManager()
+        ->createQuery('
+            SELECT habitacion.id, habitacion.capacidad, habitacion.precio_diario, habitacion.descripcion, habitacion.numero
+            FROM App:Habitacion habitacion
+        ');
+    }
+
 //    /**
 //     * @return Habitacion[] Returns an array of Habitacion objects
 //     */
