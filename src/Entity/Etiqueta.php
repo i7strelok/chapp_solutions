@@ -6,6 +6,7 @@ use App\Repository\EtiquetaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EtiquetaRepository::class)]
 class Etiqueta
@@ -16,9 +17,11 @@ class Etiqueta
     private $id;
 
     #[ORM\Column(type: 'string', length: 60)]
+    #[Assert\NotBlank()]
     private $nombre;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank()]
     private $descripcion;
 
     #[ORM\ManyToMany(targetEntity: Habitacion::class, mappedBy: 'etiquetas')]
@@ -83,5 +86,10 @@ class Etiqueta
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getNombre(); 
     }
 }

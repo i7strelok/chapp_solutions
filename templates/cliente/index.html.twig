@@ -3,37 +3,68 @@
 {% block title %}Cliente index{% endblock %}
 
 {% block body %}
-    <h1>Cliente index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Telefono</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for cliente in clientes %}
-            <tr>
-                <td>{{ cliente.id }}</td>
-                <td>{{ cliente.Nombre }}</td>
-                <td>{{ cliente.email }}</td>
-                <td>{{ cliente.telefono }}</td>
-                <td>
-                    <a href="{{ path('app_cliente_show', {'id': cliente.id}) }}">show</a>
-                    <a href="{{ path('app_cliente_edit', {'id': cliente.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_cliente_new') }}">Create new</a>
+    <div class="container">
+        <div class="table-responsive-sm justify-content-center mt-5 table-borderless">
+            <div class="row mb-5">
+                <div class="col-auto" style="padding-top: 10px">
+                    <legend class="verde-t mb4 h3">Clientes registrados</legend>
+                </div>
+                <div class="col">
+                    <a href="{{ path('app_cliente_new') }}" class="btn button-color text-white float-right" title="Crear un nuevo cliente.">Crear nuevo</a>
+                </div>
+                <div class="col-12 mt-sm-n2 mt-md-n2 mt-lg-n3" >
+                    <hr class="line-setting">
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class ="header-table-color text-white">
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>E-mail</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in pagination %}
+                        <tr>
+                            <td>{{ cliente.id }}</td>
+                            <td>{{ cliente.Nombre}}</td>
+                            <td>{{ cliente.email}}</td>
+                            <td>{{ cliente.telefono ? cliente.telefono : '' }}</td>
+                            <td class="p-1 align-middle">
+                                <div>
+                                    <a href="{{ path('app_cliente_show', {'id': cliente.id}) }}" class="btn btn-sm button-color text-white" 
+                                        data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                                        <i class="material-icons mic">visibility</i>
+                                    </a>
+                                    <a href="{{ path('app_cliente_edit', {'id': cliente.id}) }}" class="btn btn-sm button-color text-white" 
+                                        data-toggle="tooltip" data-placement="bottom" title="Editar">
+                                        <i class="material-icons mic">edit</i>
+                                    </a>
+                                    <span data-toggle="modal" data-target="#confirmDeletion">
+                                        <button id="delete-button-0" class="btn btn-sm button-color text-white" data-toggle="tooltip" 
+                                            data-placement="bottom" title="Borrar" onclick="actionSwitch('https://');">
+                                            <i class="material-icons mic">delete</i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No hay clientes para ver.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {# display navigation #}
+            <div class="d-flex justify-content-center">
+                <div class="navigation">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

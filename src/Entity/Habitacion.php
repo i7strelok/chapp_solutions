@@ -6,6 +6,7 @@ use App\Repository\HabitacionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: HabitacionRepository::class)]
 class Habitacion
@@ -16,21 +17,26 @@ class Habitacion
     private $id;
 
     #[ORM\Column(type: 'smallint')]
+    #[Assert\NotBlank()]
     private $numero;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\NotBlank()]
     private $descripcion;
 
     #[ORM\Column(type: 'smallint')]
+    #[Assert\NotBlank()]
     private $capacidad;
 
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
+    #[Assert\NotBlank()]
     private $precio_diario;
 
     #[ORM\ManyToMany(targetEntity: Reserva::class, mappedBy: 'habitaciones')]
     private $reservas;
 
     #[ORM\ManyToMany(targetEntity: Etiqueta::class, inversedBy: 'habitaciones')]
+    #[Assert\NotBlank()]
     private $etiquetas;
 
     public function __construct()

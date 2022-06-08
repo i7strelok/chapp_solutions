@@ -6,6 +6,7 @@ use App\Repository\ReservaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReservaRepository::class)]
 class Reserva
@@ -16,22 +17,28 @@ class Reserva
     private $id;
 
     #[ORM\Column(type: 'date')]
+    #[Assert\NotBlank()]
     private $fecha_inicio;
 
     #[ORM\Column(type: 'date')]
+    #[Assert\NotBlank()]
     private $fecha_fin;
 
     #[ORM\Column(type: 'smallint')]
+    #[Assert\NotBlank()]
     private $numero_huespedes;
 
     #[ORM\ManyToOne(targetEntity: Cliente::class, inversedBy: 'reservas')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank()]
     private $cliente;
 
     #[ORM\ManyToMany(targetEntity: Habitacion::class, inversedBy: 'reservas')]
+    #[Assert\NotBlank()]
     private $habitaciones;
 
     #[ORM\Column(type: 'string', length: 12)]
+    #[Assert\NotBlank()]
     private $localizador;
 
     public function __construct()

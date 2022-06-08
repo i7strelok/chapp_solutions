@@ -1,41 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Habitacion index{% endblock %}
+{% block title %}Listado de habitaciones{% endblock %}
 
 {% block body %}
-    <h1>Habitacion index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Numero</th>
-                <th>Descripcion</th>
-                <th>Capacidad</th>
-                <th>Precio_diario</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for habitacion in habitacions %}
-            <tr>
-                <td>{{ habitacion.id }}</td>
-                <td>{{ habitacion.numero }}</td>
-                <td>{{ habitacion.descripcion }}</td>
-                <td>{{ habitacion.capacidad }}</td>
-                <td>{{ habitacion.precioDiario }}</td>
-                <td>
-                    <a href="{{ path('app_habitacion_show', {'id': habitacion.id}) }}">show</a>
-                    <a href="{{ path('app_habitacion_edit', {'id': habitacion.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_habitacion_new') }}">Create new</a>
+    <div class="container">
+        <div class="table-responsive-sm justify-content-center mt-5 table-borderless">
+            <div class="row mb-5">
+                <div class="col-auto" style="padding-top: 10px">
+                    <legend class="verde-t mb4 h3">Habitaciones existentes</legend>
+                </div>
+                <div class="col">
+                    <a href="{{ path('app_habitacion_new') }}" class="btn button-color text-white float-right" title="Añadir una nueva habitación.">Crear nueva</a>
+                </div>
+                <div class="col-12 mt-sm-n2 mt-md-n2 mt-lg-n3" >
+                    <hr class="line-setting">
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class ="header-table-color text-white">
+                        <td>Id</td>
+                        <td>Nº Habitación</td>
+                        <td>Capacidad</td>
+                        <td>Precio diario (€)</td>
+                        <td>Descripción</td>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for habitacion in habitacions %}
+                        <tr>
+                            <td>{{ habitacion.id }}</td>
+                            <td>{{ habitacion.numero}}</td>
+                            <td>{{ habitacion.capacidad}}</td>
+                            <td>{{ habitacion.precioDiario }}</td>
+                            <td>{{ habitacion.descripcion ? habitacion.descripcion : '' }}</td>
+                            <td class="p-1 align-middle">
+                                <div>
+                                    <a href="{{ path('app_habitacion_show', {'id': habitacion.id}) }}" class="btn button-color btn-xs text-white" 
+                                        data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                                        <i class="material-icons mic">visibility</i>
+                                    </a>
+                                    <a href="{{ path('app_habitacion_edit', {'id': habitacion.id}) }}" class="btn button-color btn-xs text-white" 
+                                        data-toggle="tooltip" data-placement="bottom" title="Editar">
+                                        <i class="material-icons mic">edit</i>
+                                    </a>
+                                    <span data-toggle="modal" data-target="#confirmDeletion">
+                                        <button id="delete-button-0" class="btn button-color btn-xs text-white" data-toggle="tooltip" 
+                                            data-placement="bottom" title="Borrar" onclick="actionSwitch('https://');">
+                                            <i class="material-icons mic">delete</i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No hay habitaciones para ver.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

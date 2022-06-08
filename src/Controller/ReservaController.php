@@ -27,7 +27,10 @@ class ReservaController extends AbstractController
         $reserva = new Reserva();
         $form = $this->createForm(ReservaType::class, $reserva);
         $form->handleRequest($request);
-
+        /*
+            isValid() ejecuta las validaciones que definimos en el Entity.
+            isSubmitted() comprueba si se ha enviado.
+        */
         if ($form->isSubmitted() && $form->isValid()) {
             $reservaRepository->add($reserva, true);
 

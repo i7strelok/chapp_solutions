@@ -9,15 +9,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Knp\Component\Pager\PaginatorInterface;
 #[Route('/cliente')]
 class ClienteController extends AbstractController
 {
     #[Route('/', name: 'app_cliente_index', methods: ['GET'])]
-    public function index(ClienteRepository $clienteRepository): Response
+    public function index(ClienteRepository $clienteRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $query = $clienteRepository->getAllClients();
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10 /*limite de registros por página*/
+        );
         return $this->render('cliente/index.html.twig', [
-            'clientes' => $clienteRepository->findAll(),
+            'pagination' => $pagination
         ]);
     }
 

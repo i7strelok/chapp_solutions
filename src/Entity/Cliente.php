@@ -6,6 +6,7 @@ use App\Repository\ClienteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ClienteRepository::class)]
 class Cliente
@@ -16,9 +17,12 @@ class Cliente
     private $id;
 
     #[ORM\Column(type: 'string', length: 60)]
+    #[Assert\NotBlank()]
+    #[Assert\Type('string')]
     private $Nombre;
 
     #[ORM\Column(type: 'string', length: 60, nullable: true)]
+    #[Assert\NotBlank()]
     private $email;
 
     #[ORM\Column(type: 'smallint')]

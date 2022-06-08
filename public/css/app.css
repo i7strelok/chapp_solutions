@@ -41,3 +41,26 @@ body{
     background-color: #679A07 !important;
     border-color: #679A07 !important;
 }
+
+/*Colores de la paginación (general)*/
+.pagination .page-link {
+    background: #679A07 !important;
+    color: white !important;
+    border-color: #679A07 !important;
+}
+
+/*Colores de la paginación (cuando se hace click)*/
+.pagination .page-link:hover {
+    background: #808080 !important;
+    color: white !important;
+    border-color: #808080 !important;
+}
+
+/*Colores de la paginación (en el elemento activo)*/
+.page-item.active .page-link {
+    z-index: 3;
+    color: white;
+    background-color: #808080 !important;
+    border-color: #808080 !important;
+}
+ 
