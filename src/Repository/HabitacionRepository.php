@@ -40,13 +40,26 @@ class HabitacionRepository extends ServiceEntityRepository
     }
 
     public function getAllRooms(){
-        return $this->getEntityManager()
+        /*return $this->getEntityManager()
         ->createQuery('
             SELECT habitacion.id, habitacion.capacidad, habitacion.precio_diario, habitacion.descripcion, habitacion.numero
             FROM App:Habitacion habitacion
-        ');
+        ');*/
+        return $this->createQueryBuilder('h')
+        ->orderBy('h.precio_diario', 'ASC')->getQuery();
     }
 
+    public function getAvailableRooms($fecha_inicio, $fecha_fin, $huespedes){
+        //Solución fea
+        $sql = "SELECT * FROM habitacion h WHERE h.capacidad>=$huespedes
+        AND h.id NOT IN (SELECT rh.habitacion_id 
+        FROM reserva_habitacion rh 
+        INNER JOIN reserva r ON r.id = rh.reserva_id
+        WHERE (r.fecha_inicio BETWEEN '".$fecha_inicio."' and '".$fecha_fin."') 
+        OR (r.fecha_fin BETWEEN '".$fecha_inicio."' and '".$fecha_fin."'));";
+        $em = $this->getEntityManager();
+        return $em->getConnection()->fetchAllAssociative($sql);
+    }
 //    /**
 //     * @return Habitacion[] Returns an array of Habitacion objects
 //     */

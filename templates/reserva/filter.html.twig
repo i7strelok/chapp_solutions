@@ -1,16 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Listado de habitaciones{% endblock %}
-
+{% block title %}Nueva reserva{% endblock %}
+{% block javascripts %} 
+    <script src="/js/js-datepicker.js"></script>
+{% endblock %}
 {% block body %}
+    {% for message in app.flashes('exito') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="row">
+        <div id="filters" class="bg-dark col-lg-10 offset-lg-1 col-md-12 my-3" style="display: block;">
+            <form class="form-inline my-3" action="javascript:requestChart()" method="GET">
+                <div class="form-row" style="width: 100%">
+                    <input hidden="" id="txtPublisherSelected" value="">
+                        <div class="col-md-2 col-sm-3">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="txtFrom">Desde: </label>
+                                </div> 
+                                <input id="fecha_inicio" name="fecha_inicio" type="text" autocomplete="off" placeholder="dd/mm/yyyy" class="form-control">
+                            </div>
+                        </div>   
+                        <div class="col-md-2 col-sm-3">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="txtTo">Hasta: </label>
+                                </div> 
+                                <input id="fecha_fin" name="fecha_fin" type="text" autocomplete="off" placeholder="dd/mm/yyyy" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 col-sm-3">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="txtTo">Huéspedes: </label>
+                                </div> 
+                                <input id="numero_huespedes" name="numero_huespedes" type="text" autocomplete="off" placeholder="1" class="form-control">
+                            </div>
+                        </div>
+                        <!-- Button -->
+                        <div class="col-md-2 col-sm-12">
+                            <div class="input-group">
+                                <button id="btnSave" name="btnSave" class="btn verde-b text-white ml-auto">Filtrar</button>
+                            </div>
+                        </div>  
+                </div>  
+            </form>
+        </div>
+    </div>
     <div class="container">
         <div class="table-responsive-sm justify-content-center mt-5 table-borderless">
             <div class="row mb-5">
                 <div class="col-auto" style="padding-top: 10px">
-                    <legend class="verde-t mb4 h3">Habitaciones existentes</legend>
-                </div>
-                <div class="col">
-                    <a href="{{ path('app_habitacion_new') }}" class="btn button-color text-white float-right" title="Añadir una nueva habitación.">Crear nueva</a>
+                    <legend class="verde-t mb4 h3">Habitaciones disponibles para los filtros ingresados</legend>
                 </div>
                 <div class="col-12 mt-sm-n2 mt-md-n2 mt-lg-n3" >
                     <hr class="line-setting">
@@ -25,7 +69,7 @@
                         <td>Precio diario (€)</td>
                         <td>Descripción</td>
                         <th>Acciones</th>
-                    </tr>                  
+                    </tr>
                 </thead>
                 <tbody>
                     {% for habitacion in habitaciones %}
@@ -68,5 +112,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
 {% endblock %}

@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Reserva;
+use App\Entity\Habitacion;
 use App\Form\ReservaType;
 use App\Repository\ReservaRepository;
+use App\Repository\HabitacionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +27,38 @@ class ReservaController extends AbstractController
         );
         return $this->render('reserva/index.html.twig', [
             'reservas' => $pagination
+        ]);
+    }
+
+    #[Route('/filter', name: 'app_reserva_filter', methods: ['GET'])]
+    public function filter(Request $request, ReservaRepository $reservaRepository, PaginatorInterface $paginator): Response
+    {
+        $fecha_inicio = ''; $fecha_fin = ''; $huespedes = '';
+        if($request->query->has('fecha_inicio') === null){ 
+            $fecha_inicio = date('d-m-Y');
+        }else{
+            $fecha_inicio = $request->request->get('fecha_inicio');
+        }
+        if($request->query->has('fecha_fin') === null){ 
+            $fecha_fin = date("d-m-Y", strtotime(date('d-m-Y')."+ 7 days")); 
+        }else{
+            $fecha_fin = $request->request->get('fecha_fin');
+        }   
+        if($request->query->has('huespedes') === null){ 
+            $huespedes = 2;
+        }else{
+            $huespedes = $request->request->get('huespedes');
+        }     
+        //$habitacionRepository = new HabitacionRepository();
+        $query = $this->getDoctrine()
+        ->getRepository(Habitacion::class)->getAvailableRooms($fecha_inicio, $fecha_fin, $huespedes);
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10 /*límite de registros por página*/
+        );
+        return $this->render('reserva/filter.html.twig', [
+            'habitaciones' => $pagination
         ]);
     }
 
