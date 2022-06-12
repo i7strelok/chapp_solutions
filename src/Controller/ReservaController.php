@@ -34,22 +34,21 @@ class ReservaController extends AbstractController
     public function filter(Request $request, ReservaRepository $reservaRepository, PaginatorInterface $paginator): Response
     {
         $fecha_inicio = ''; $fecha_fin = ''; $huespedes = '';
-        if($request->query->has('fecha_inicio') === null){ 
+        if($request->query->has('fecha_inicio') == null){ 
             $fecha_inicio = date('d-m-Y');
         }else{
-            $fecha_inicio = $request->request->get('fecha_inicio');
+            $fecha_inicio = $request->query->get('fecha_inicio');
         }
-        if($request->query->has('fecha_fin') === null){ 
+        if($request->query->has('fecha_fin') == null){ 
             $fecha_fin = date("d-m-Y", strtotime(date('d-m-Y')."+ 7 days")); 
         }else{
-            $fecha_fin = $request->request->get('fecha_fin');
+            $fecha_fin = $request->query->get('fecha_fin');
         }   
-        if($request->query->has('huespedes') === null){ 
+        if($request->query->has('huespedes') == null){ 
             $huespedes = 2;
         }else{
-            $huespedes = $request->request->get('huespedes');
-        }     
-        //$habitacionRepository = new HabitacionRepository();
+            $huespedes = $request->query->get('huespedes');
+        }  
         $query = $this->getDoctrine()
         ->getRepository(Habitacion::class)->getAvailableRooms($fecha_inicio, $fecha_fin, $huespedes);
         $pagination = $paginator->paginate(
@@ -58,7 +57,10 @@ class ReservaController extends AbstractController
             10 /*límite de registros por página*/
         );
         return $this->render('reserva/filter.html.twig', [
-            'habitaciones' => $pagination
+            'habitaciones' => $pagination,
+            'fecha_inicio' => $fecha_inicio,
+            'fecha_fin' => $fecha_fin,
+            'huespedes' => $huespedes
         ]);
     }
 
@@ -66,6 +68,11 @@ class ReservaController extends AbstractController
     public function new(Request $request, ReservaRepository $reservaRepository): Response
     {
         $reserva = new Reserva();
+        $date = \DateTime::createFromFormat('Y-m-d', trim($request->query->get('fecha_inicio')));
+        $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
+        $reserva->setFechaInicio(\DateTime::createFromFormat('d/m/Y', strval($request->query->get('fecha_inicio'))));
+        $reserva->setFechaFin(\DateTime::createFromFormat('d/m/Y', strval($request->query->get('fecha_fin'))));
+
         $form = $this->createForm(ReservaType::class, $reserva);
         $form->handleRequest($request);
         /*
@@ -77,6 +84,8 @@ class ReservaController extends AbstractController
 
             return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
         }
+
+        
 
         return $this->renderForm('reserva/new.html.twig', [
             'reserva' => $reserva,

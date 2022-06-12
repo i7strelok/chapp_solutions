@@ -1,4 +1,7 @@
-<form method="post" action="{{ path('app_etiqueta_delete', {'id': etiquetum.id}) }}" onsubmit="return confirm('¿Seguro que desea eliminar esta etiqueta?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ etiquetum.id) }}">
-    <button class="btn">Delete</button>
+<form method="post" action="{{ path('app_etiqueta_delete', {'id': etiqueta.id}) }}" 
+    onsubmit="return confirm('¿Seguro que desea eliminar esta etiqueta?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ etiqueta.id) }}">
+    <button class="btn btn-sm button-color text-white">
+        <i class="material-icons mic">delete</i>
+    </button>
 </form>

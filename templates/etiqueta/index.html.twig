@@ -41,12 +41,7 @@
                                         data-toggle="tooltip" data-placement="bottom" title="Editar">
                                         <i class="material-icons mic">edit</i>
                                     </a>
-                                    <span data-toggle="modal" data-target="#confirmDeletion">
-                                        <button id="delete-button-0" class="btn button-color btn-xs text-white" data-toggle="tooltip" 
-                                            data-placement="bottom" title="Borrar" onclick="actionSwitch('');">
-                                            <i class="material-icons mic">delete</i>
-                                        </button>
-                                    </span>
+                                    {{ include('etiqueta/_delete_form.html.twig') }}
                                 </div>
                             </td>
                         </tr>

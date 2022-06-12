@@ -10,91 +10,80 @@
             {{ message }}
         </div>
     {% endfor %}
-    <div class="row">
-        <div id="filters" class="bg-dark col-lg-10 offset-lg-1 col-md-12 my-3" style="display: block;">
-            <form class="form-inline my-3" action="javascript:requestChart()" method="GET">
-                <div class="form-row" style="width: 100%">
-                    <input hidden="" id="txtPublisherSelected" value="">
-                        <div class="col-md-2 col-sm-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="txtFrom">Desde: </label>
-                                </div> 
-                                <input id="fecha_inicio" name="fecha_inicio" type="text" autocomplete="off" placeholder="dd/mm/yyyy" class="form-control">
-                            </div>
-                        </div>   
-                        <div class="col-md-2 col-sm-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="txtTo">Hasta: </label>
-                                </div> 
-                                <input id="fecha_fin" name="fecha_fin" type="text" autocomplete="off" placeholder="dd/mm/yyyy" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="col-md-2 col-sm-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="txtTo">Huéspedes: </label>
-                                </div> 
-                                <input id="numero_huespedes" name="numero_huespedes" type="text" autocomplete="off" placeholder="1" class="form-control">
-                            </div>
-                        </div>
-                        <!-- Button -->
-                        <div class="col-md-2 col-sm-12">
-                            <div class="input-group">
-                                <button id="btnSave" name="btnSave" class="btn verde-b text-white ml-auto">Filtrar</button>
-                            </div>
-                        </div>  
-                </div>  
-            </form>
-        </div>
-    </div>
-    <div class="container">
+    <div class="container"> 
         <div class="table-responsive-sm justify-content-center mt-5 table-borderless">
             <div class="row mb-5">
                 <div class="col-auto" style="padding-top: 10px">
-                    <legend class="verde-t mb4 h3">Habitaciones disponibles para los filtros ingresados</legend>
+                    <legend class="verde-t mb4 h3">Búsqueda de habitaciones</legend>
                 </div>
                 <div class="col-12 mt-sm-n2 mt-md-n2 mt-lg-n3" >
                     <hr class="line-setting">
                 </div>
+                <div id="filters" class="bg-dark col-lg-10 offset-lg-1 col-md-12 my-3" style="display: block;">
+                    <form method="GET" class="form-inline my-3" action="{{ path('app_reserva_filter') }}">
+			        <input type="hidden" name="_token" value="{{ csrf_token('filter') }}">
+                        <div class="form-row" style="width: 100%">
+
+                            <div class="col-md-3 col-sm-3 mb-md-0 mb-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <label class="input-group-text" for="fecha_inicio">Desde: </label>
+                                    </div> 
+                                    <input id="fecha_inicio" name="fecha_inicio" type="text" autocomplete="off" placeholder="dd/mm/yyyy" class="form-control">
+                                </div>
+                            </div>   
+
+                            <div class="col-md-3 col-sm-3 mb-md-0 mb-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="fecha_fin">Hasta: </label>
+                                    </div> 
+                                    <input id="fecha_fin" name="fecha_fin" type="text" autocomplete="off" placeholder="dd/mm/yyyy" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 col-sm-2">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="huespedes">Huéspedes: </label>
+                                    </div> 
+                                    <input id="huespedes" name="huespedes" type="text" autocomplete="off" class="form-control">
+                                </div>
+                            </div>
+                            <!-- Button -->
+                            <div class="col-md-2 col-sm-12">
+                                <div class="input-group">
+                                    <button id="btnSave" name="btnSave" class="btn button-color text-white ml-auto">Filtrar</button>
+                                </div>
+                            </div>
+                        </div>  
+                    </form>
+                    </div>   
             </div>
             <table class="table">
                 <thead>
                     <tr class ="header-table-color text-white">
-                        <td>Id</td>
-                        <td>Nº Habitación</td>
-                        <td>Capacidad</td>
-                        <td>Precio diario (€)</td>
                         <td>Descripción</td>
-                        <th>Acciones</th>
+                        <td>Capacidad</td>
+                        <td>Precio diario (€)</td>                  
+                        <th>Seleccionar</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for habitacion in habitaciones %}
                         <tr>
-                            <td>{{ habitacion.id }}</td>
-                            <td>{{ habitacion.numero}}</td>
+                            <td>{{ habitacion.descripcion ? habitacion.descripcion : '' }}</td>
                             <td>{{ habitacion.capacidad}}</td>
                             <td>{{ habitacion.precio_diario }}</td>
-                            <td>{{ habitacion.descripcion ? habitacion.descripcion : '' }}</td>
                             <td class="p-1 align-middle">
                                 <div>
-                                    <a href="{{ path('app_habitacion_show', {'id': habitacion.id}) }}" class="btn button-color btn-xs text-white" 
-                                        data-toggle="tooltip" data-placement="bottom" title="Visualizar">
-                                        <i class="material-icons mic">visibility</i>
+                                    <a href="{{ path('app_reserva_new', {'id': habitacion.id, 
+                                    'fecha_inicio': fecha_inicio, 'fecha_fin': fecha_fin,
+                                    'huespedes': huespedes}) }}" 
+                                    class="btn button-color btn-xs text-white" 
+                                        data-toggle="tooltip" data-placement="bottom" title="Reservar">
+                                        <i class="material-icons mic">book_online</i>
                                     </a>
-                                    <a href="{{ path('app_habitacion_edit', {'id': habitacion.id}) }}" class="btn button-color btn-xs text-white" 
-                                        data-toggle="tooltip" data-placement="bottom" title="Editar">
-                                        <i class="material-icons mic">edit</i>
-                                    </a>
-                                    <span data-toggle="modal" data-target="#confirmDeletion">
-                                        <button id="delete-button-0" class="btn button-color btn-xs text-white" data-toggle="tooltip" 
-                                            data-placement="bottom" title="Borrar" onclick="actionSwitch('https://');">
-                                            <i class="material-icons mic">delete</i>
-                                        </button>
-                                    </span>
                                 </div>
                             </td>
                         </tr>

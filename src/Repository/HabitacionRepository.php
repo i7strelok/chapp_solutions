@@ -55,8 +55,10 @@ class HabitacionRepository extends ServiceEntityRepository
         AND h.id NOT IN (SELECT rh.habitacion_id 
         FROM reserva_habitacion rh 
         INNER JOIN reserva r ON r.id = rh.reserva_id
-        WHERE (r.fecha_inicio BETWEEN '".$fecha_inicio."' and '".$fecha_fin."') 
-        OR (r.fecha_fin BETWEEN '".$fecha_inicio."' and '".$fecha_fin."'));";
+		WHERE
+		(r.fecha_inicio BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."') or
+		(r.fecha_fin BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."') or 
+		('".$fecha_inicio."' BETWEEN r.fecha_inicio AND r.fecha_fin));";
         $em = $this->getEntityManager();
         return $em->getConnection()->fetchAllAssociative($sql);
     }

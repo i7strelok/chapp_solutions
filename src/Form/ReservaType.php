@@ -15,16 +15,18 @@ class ReservaType extends AbstractType
         $builder
             ->add('fecha_inicio', DateType::class, [
                 'widget' => 'single_text',
-                'html5' => false,
-                'attr' => ['class' => 'js-datepicker'],
+                'format' => 'dd/MM/yyyy',
+                'html5' => true,
                 'required' => true,
+                'attr' => ['class' => 'disabled'],
                 'invalid_message' => 'La fecha de inicio de la reserva es obligatoria.',
             ])
             ->add('fecha_fin', DateType::class, [
                 'widget' => 'single_text',
-                'format' => 'dd-MM-yyyy',
+                'format' => 'dd/MM/yyyy',
                 'html5' => false,
                 'required' => true,
+                'attr' => ['class' => 'disabled'],
                 'invalid_message' => 'La fecha de finalización de la reserva es obligatoria.',
             ])
             ->add('numero_huespedes', null, [
@@ -32,17 +34,14 @@ class ReservaType extends AbstractType
                 'required' => true,
                 'invalid_message' => 'El número de huéspedes es obligatorio.',
                 'attr' => array(
-                    'class' => 'form-control',
+                    'class' => 'form-control disabled',
                     'title' => 'Número de huéspedes para esta reserva'
                 ),
             ])
             ->add('cliente', null, [
                 'label' => 'Seleccione el cliente'
             ])
-            ->add('habitaciones', null, [
-                'label' => 'Seleccione las habitaciones'
-            ])
-            ->add('Guardar', SubmitType::class, [
+            ->add('Reservar', SubmitType::class, [
                 'attr' => ['class' => 'btn button-color text-white'],
             ])
         ;

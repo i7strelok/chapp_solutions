@@ -31,10 +31,10 @@
                     {% for reserva in reservas %}
                         <tr>
                             <td>{{ reserva.localizador }}</td>
-                            <td>{{ reserva.getHabitaciones()[0].Descripcion }}</td>
-                            <td>{{ reserva.fechaInicio ? reserva.fechaInicio|date('d-m-Y') : '' }}</td>
-                            <td>{{ reserva.fechaFin ? reserva.fechaFin|date('d-m-Y') : '' }}</td>
-                            <td>{{ reserva.getCliente().nombre }}</td>
+                            <td>reserva.getHabitaciones()[0].Descripcion</td>
+                            <td>{{ reserva.fecha_inicio ? reserva.fecha_inicio|date('d-m-Y') : '' }}</td>
+                            <td>{{ reserva.fecha_fin ? reserva.fecha_fin|date('d-m-Y') : '' }}</td>
+                            <td>reserva.getCliente().nombre</td>
                             <td class="p-1 align-middle">
                                 <div>
                                     <a href="{{ path('app_reserva_show', {'id': reserva.id}) }}" class="btn btn-sm button-color text-white" 
@@ -45,12 +45,7 @@
                                         data-toggle="tooltip" data-placement="bottom" title="Editar">
                                         <i class="material-icons mic">edit</i>
                                     </a>
-                                    <span data-toggle="modal" data-target="#confirmDeletion">
-                                        <button id="delete-button-0" class="btn btn-sm button-color text-white" data-toggle="tooltip" 
-                                            data-placement="bottom" title="Borrar" onclick="actionSwitch('https://');">
-                                            <i class="material-icons mic">delete</i>
-                                        </button>
-                                    </span>
+                                    {{ include('reserva/_delete_form.html.twig') }}
                                 </div>
                             </td>
                         </tr>
