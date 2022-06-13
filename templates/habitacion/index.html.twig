@@ -3,7 +3,6 @@
 {% block title %}Listado de habitaciones{% endblock %}
 
 {% block body %}
-{{dump(habitaciones)}}
     <div class="container">
         <div class="table-responsive-sm justify-content-center mt-5 table-borderless">
             <div class="row mb-5">
@@ -38,11 +37,11 @@
                             <td>{{ habitacion.descripcion ? habitacion.descripcion : '' }}</td>
                             <td class="p-1 align-middle">
                                 <div>
-                                    <a href="{{ path('app_habitacion_show', {'id': habitacion.id}) }}" class="btn button-color btn-xs text-white" 
+                                    <a href="{{ path('app_habitacion_show', {'id': habitacion.id}) }}" class="btn btn-sm button-color text-white" 
                                         data-toggle="tooltip" data-placement="bottom" title="Visualizar">
                                         <i class="material-icons mic">visibility</i>
                                     </a>
-                                    <a href="{{ path('app_habitacion_edit', {'id': habitacion.id}) }}" class="btn button-color btn-xs text-white" 
+                                    <a href="{{ path('app_habitacion_edit', {'id': habitacion.id}) }}" class="btn btn-sm button-color text-white" 
                                         data-toggle="tooltip" data-placement="bottom" title="Editar">
                                         <i class="material-icons mic">edit</i>
                                     </a>

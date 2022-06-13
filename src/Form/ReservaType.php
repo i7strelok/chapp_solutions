@@ -16,7 +16,7 @@ class ReservaType extends AbstractType
             ->add('fecha_inicio', DateType::class, [
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
-                'html5' => true,
+                'html5' => false,
                 'required' => true,
                 'attr' => ['class' => 'disabled'],
                 'invalid_message' => 'La fecha de inicio de la reserva es obligatoria.',
@@ -41,7 +41,10 @@ class ReservaType extends AbstractType
             ->add('cliente', null, [
                 'label' => 'Seleccione el cliente'
             ])
-            ->add('Reservar', SubmitType::class, [
+            ->add('habitacion', null, [
+                'label' => 'Habitación seleccionada'
+            ])
+            ->add('Guardar', SubmitType::class, [
                 'attr' => ['class' => 'btn button-color text-white'],
             ])
         ;

@@ -19,7 +19,7 @@ class Cliente
     #[ORM\Column(type: 'string', length: 60)]
     #[Assert\NotBlank()]
     #[Assert\Type('string')]
-    private $Nombre;
+    private $nombre;
 
     #[ORM\Column(type: 'string', length: 60, nullable: true)]
     #[Assert\NotBlank()]
@@ -43,12 +43,12 @@ class Cliente
 
     public function getNombre(): ?string
     {
-        return $this->Nombre;
+        return $this->nombre;
     }
 
-    public function setNombre(string $Nombre): self
+    public function setNombre(string $nombre): self
     {
-        $this->Nombre = $Nombre;
+        $this->nombre = $nombre;
 
         return $this;
     }

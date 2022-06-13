@@ -32,17 +32,17 @@ class Habitacion
     #[Assert\NotBlank()]
     private $precio_diario;
 
-    #[ORM\ManyToMany(targetEntity: Reserva::class, mappedBy: 'habitaciones')]
-    private $reservas;
-
     #[ORM\ManyToMany(targetEntity: Etiqueta::class, inversedBy: 'habitaciones')]
     #[Assert\NotBlank()]
     private $etiquetas;
 
+    #[ORM\OneToMany(mappedBy: 'habitacion', targetEntity: Reserva::class)]
+    private $reservas;
+
     public function __construct()
     {
-        $this->reservas = new ArrayCollection();
         $this->etiquetas = new ArrayCollection();
+        $this->reservas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,33 +99,6 @@ class Habitacion
     }
 
     /**
-     * @return Collection<int, Reserva>
-     */
-    public function getReservas(): Collection
-    {
-        return $this->reservas;
-    }
-
-    public function addReserva(Reserva $reserva): self
-    {
-        if (!$this->reservas->contains($reserva)) {
-            $this->reservas[] = $reserva;
-            $reserva->addHabitacione($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReserva(Reserva $reserva): self
-    {
-        if ($this->reservas->removeElement($reserva)) {
-            $reserva->removeHabitacione($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Etiqueta>
      */
     public function getEtiquetas(): Collection
@@ -148,8 +121,39 @@ class Habitacion
 
         return $this;
     }
+    
     public function __toString(): string
     {
         return $this->getDescripcion(); 
+    }
+
+    /**
+     * @return Collection<int, Reserva>
+     */
+    public function getReservas(): Collection
+    {
+        return $this->reservas;
+    }
+
+    public function addReserva(Reserva $reserva): self
+    {
+        if (!$this->reservas->contains($reserva)) {
+            $this->reservas[] = $reserva;
+            $reserva->setHabitacion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReserva(Reserva $reserva): self
+    {
+        if ($this->reservas->removeElement($reserva)) {
+            // set the owning side to null (unless already changed)
+            if ($reserva->getHabitacion() === $this) {
+                $reserva->setHabitacion(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -3,28 +3,56 @@
 {% block title %}Etiqueta{% endblock %}
 
 {% block body %}
-    <h1>Etiqueta</h1>
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="card bg-light p-4 rounded mb-4">  
+          <div class="row mb-4 border-bottom">
+            <div class="col p-0">
+              <legend class="mb4 text-left">Visualizando etiqueta</legend>
+            </div>
+             <div class="col p-0">
+                <div class="float-right p-0">
+                    <a href="{{ path('app_etiqueta_index') }}" class="btn btn-sm button-color text-white" 
+                    data-toggle="tooltip" data-placement="bottom" title="Regresar al listado de etiquetas">
+                        <i class="material-icons mic">arrow_back</i>
+                    </a>
+                    <a href="{{ path('app_etiqueta_edit', {'id': etiqueta.id}) }}" class="btn btn-sm button-color text-white" 
+                        data-toggle="tooltip" data-placement="bottom" title="Editar">
+                        <i class="material-icons mic">edit</i>
+                    </a>
+                    {{ include('etiqueta/_delete_form.html.twig') }}
+                </div>
+            </div>
+          </div>            
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ etiquetum.id }}</td>
-            </tr>
-            <tr>
-                <th>Nombre</th>
-                <td>{{ etiquetum.nombre }}</td>
-            </tr>
-            <tr>
-                <th>Descripcion</th>
-                <td>{{ etiquetum.descripcion }}</td>
-            </tr>
-        </tbody>
-    </table>
+          <!-- id -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="Id">Id</label>
+            </div> 
+            <input id="Id" name="Id" type="text" class="form-control" value="{{ etiqueta.id }}" disabled="true">
+          </div>
 
-    <a href="{{ path('app_etiqueta_index') }}">back to list</a>
+          <!-- nombre -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="nombre">Nombre</label>
+            </div>
+            <input id="nombre" name="nombre" type="text" class="form-control" value="{{ etiqueta.nombre }}" disabled="true">
+          </div>
 
-    <a href="{{ path('app_etiqueta_edit', {'id': etiquetum.id}) }}">edit</a>
+          <!-- descripcion -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="descripcion">Descripción</label>
+            </div>
+            <input id="descripcion" name="descripcion" type="text" class="form-control" value="{{ etiqueta.descripcion }}" disabled="true">
+          </div>
 
-    {{ include('etiqueta/_delete_form.html.twig') }}
+        </div>
+      </div>
+  </div>
+</div>
+
+
 {% endblock %}

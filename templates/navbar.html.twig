@@ -11,7 +11,7 @@
         <div class="collapse navbar-collapse justify-content-end" id="nav">
             <ul class="navbar-nav mt-2 mt-lg-0">
                 <li class="nav-item navbar-text">
-                    <a class="nav-link text-white" href="{{path('app_reserva_index')}}">Inicio</a>
+                    <a class="nav-link text-white" href="{{path('app_reserva_index')}}">Reservas</a>
                 </li>                           
                 <li class="nav-item navbar-text">
                     <a class="nav-link text-white" href="{{path('app_habitacion_index')}}">Habitaciones</a>
@@ -21,19 +21,6 @@
                 </li>                
                 <li class="nav-item navbar-text">
                     <a class="nav-link text-white" href="{{path('app_cliente_index')}}">Clientes</a>
-                </li>
-                <li class="nav-item navbar-text dropdown">
-                    <a class="nav-link text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown">Mi cuenta</a>
-                    <div class="dropdown-menu bg-dark">
-                        <a class="nav-link text-white dropdown-item bg" href="{{path('app_reserva_index')}}">Configuraciones</a>
-                        <a class="nav-link text-white dropdown-item bg" href="{{path('app_reserva_index')}}">Cambiar contraseña</a>
-                        <a class="nav-link text-white dropdown-item bg" href="" onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();">Cerrar sesión
-                        </a>
-                        <form id="logout-form" action="{{path('app_reserva_index')}}" method="POST" style="display: none;">
-                            csrf_field() 
-                        </form>
-                    </div>
                 </li>
             </ul>
         </div>

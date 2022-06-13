@@ -3,11 +3,21 @@
 {% block title %}Edit Cliente{% endblock %}
 
 {% block body %}
-    <h1>Edit Cliente</h1>
-
-    {{ include('cliente/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_cliente_index') }}">back to list</a>
-
-    {{ include('cliente/_delete_form.html.twig') }}
+    {% for message in app.flashes('exito') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-canter">
+            <div class = "col-6 bg-white rounded my-3 p-5">
+                <a href="{{ path('app_cliente_index') }}" class="btn btn-sm button-color text-white" 
+                    data-toggle="tooltip" data-placement="bottom" title="Regresar al listado de clientes">
+                        <i class="material-icons mic">arrow_back</i>
+                </a>
+                <h1>Editar cliente</h1>
+                {{ include('cliente/_form.html.twig') }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

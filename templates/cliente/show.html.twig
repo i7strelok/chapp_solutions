@@ -3,32 +3,64 @@
 {% block title %}Cliente{% endblock %}
 
 {% block body %}
-    <h1>Cliente</h1>
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="card bg-light p-4 rounded mb-4">  
+          <div class="row mb-4 border-bottom">
+            <div class="col p-0">
+              <legend class="mb4 text-left">Visualizando cliente</legend>
+            </div>
+             <div class="col p-0">
+                <div class="float-right p-0">
+                    <a href="{{ path('app_cliente_index') }}" class="btn btn-sm button-color text-white" 
+                    data-toggle="tooltip" data-placement="bottom" title="Regresar al listado de clientes">
+                        <i class="material-icons mic">arrow_back</i>
+                    </a>
+                    <a href="{{ path('app_cliente_edit', {'id': cliente.id}) }}" class="btn btn-sm button-color text-white" 
+                        data-toggle="tooltip" data-placement="bottom" title="Editar">
+                        <i class="material-icons mic">edit</i>
+                    </a>
+                    {{ include('cliente/_delete_form.html.twig') }}
+                </div>
+            </div>
+          </div>            
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ cliente.id }}</td>
-            </tr>
-            <tr>
-                <th>Nombre</th>
-                <td>{{ cliente.Nombre }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ cliente.email }}</td>
-            </tr>
-            <tr>
-                <th>Telefono</th>
-                <td>{{ cliente.telefono }}</td>
-            </tr>
-        </tbody>
-    </table>
+          <!-- id -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="Id">Id</label>
+            </div> 
+            <input id="Id" name="Id" type="text" class="form-control" value="{{ cliente.id }}" disabled="true">
+          </div>
 
-    <a href="{{ path('app_cliente_index') }}">back to list</a>
+          <!-- nombre -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="nombre">Nombre</label>
+            </div>
+            <input id="nombre" name="nombre" type="text" class="form-control" value="{{ cliente.nombre }}" disabled="true">
+          </div>
 
-    <a href="{{ path('app_cliente_edit', {'id': cliente.id}) }}">edit</a>
+          <!-- email -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="email">E-mail</label>
+            </div>
+            <input id="email" name="email" type="text" class="form-control" value="{{ cliente.email }}" disabled="true">
+          </div>
 
-    {{ include('cliente/_delete_form.html.twig') }}
+          <!-- teléfono -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="telefono">Télefono</label>
+            </div>
+            <input id="telefono" name="telefono" type="text" class="form-control" value="{{ cliente.telefono ? cliente.telefono : '' }}" disabled="true">
+          </div>
+
+        </div>
+      </div>
+  </div>
+</div>
+
+
 {% endblock %}

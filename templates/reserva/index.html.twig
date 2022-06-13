@@ -31,10 +31,10 @@
                     {% for reserva in reservas %}
                         <tr>
                             <td>{{ reserva.localizador }}</td>
-                            <td>reserva.getHabitaciones()[0].Descripcion</td>
-                            <td>{{ reserva.fecha_inicio ? reserva.fecha_inicio|date('d-m-Y') : '' }}</td>
-                            <td>{{ reserva.fecha_fin ? reserva.fecha_fin|date('d-m-Y') : '' }}</td>
-                            <td>reserva.getCliente().nombre</td>
+                            <td>{{ reserva.descripcionHabitacion }}</td>
+                            <td>{{ reserva.fecha_inicio ? reserva.fecha_inicio|date('d/m/Y') : '' }}</td>
+                            <td>{{ reserva.fecha_fin ? reserva.fecha_fin|date('d/m/Y') : '' }}</td>
+                            <td>{{ reserva.nombreCliente }}</td>
                             <td class="p-1 align-middle">
                                 <div>
                                     <a href="{{ path('app_reserva_show', {'id': reserva.id}) }}" class="btn btn-sm button-color text-white" 

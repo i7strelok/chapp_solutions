@@ -40,12 +40,16 @@ class ReservaRepository extends ServiceEntityRepository
     }
 
     public function getAllBookings(){
-        return $this->getEntityManager()
-        ->createQuery('
-            SELECT reserva.id, reserva.localizador, reserva.fecha_inicio, reserva.fecha_fin, 
-                reserva.numero_huespedes, cliente
-            FROM App:Reserva reserva JOIN App:Cliente cliente
-        ');
+
+
+        $data = $this->createQueryBuilder('r')
+        ->select('r.id, r.localizador, r.fecha_inicio, r.fecha_fin, c.id as idCliente, 
+            c.nombre AS nombreCliente, h.descripcion AS descripcionHabitacion')
+        ->innerJoin('App:Cliente', 'c', 'WITH', 'r.cliente = c.id')
+        ->innerJoin('App:Habitacion', 'h', 'WITH', 'r.habitacion = h.id')
+        ->getQuery();
+
+        return $data;
     }
 
 //    /**

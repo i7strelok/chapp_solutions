@@ -33,14 +33,16 @@ class ReservaController extends AbstractController
     #[Route('/filter', name: 'app_reserva_filter', methods: ['GET'])]
     public function filter(Request $request, ReservaRepository $reservaRepository, PaginatorInterface $paginator): Response
     {
-        $fecha_inicio = ''; $fecha_fin = ''; $huespedes = '';
+        $fecha_inicio = ''; $fecha_fin = ''; $huespedes = ''; $etiquetas = '';
         if($request->query->has('fecha_inicio') == null){ 
-            $fecha_inicio = date('d-m-Y');
+            //$fecha_inicio = \DateTime::createFromFormat('d/m/Y', strval(date('d/m/Y')));
+            $fecha_inicio = strval(date('d/m/Y'));
         }else{
             $fecha_inicio = $request->query->get('fecha_inicio');
         }
         if($request->query->has('fecha_fin') == null){ 
-            $fecha_fin = date("d-m-Y", strtotime(date('d-m-Y')."+ 7 days")); 
+            //$fecha_fin = \DateTime::createFromFormat('d/m/Y', strval(date("d-m-Y", strtotime(date('d-m-Y')."+ 7 days")))); 
+            $fecha_fin = strval(date("d/m/Y", strtotime(date('d-m-Y')."+ 7 days"))); 
         }else{
             $fecha_fin = $request->query->get('fecha_fin');
         }   
@@ -49,8 +51,15 @@ class ReservaController extends AbstractController
         }else{
             $huespedes = $request->query->get('huespedes');
         }  
+        if($request->query->has('etiquetas') == null){ 
+            $etiquetas = '';
+        }else{
+            $etiquetas = $request->query->get('etiquetas');
+        }          
+        $fecha_fin_c = date("Y-m-d", strtotime($fecha_fin));
+        $fecha_inicio_c = date("Y-m-d", strtotime($fecha_inicio));
         $query = $this->getDoctrine()
-        ->getRepository(Habitacion::class)->getAvailableRooms($fecha_inicio, $fecha_fin, $huespedes);
+        ->getRepository(Habitacion::class)->getAvailableRooms($fecha_inicio_c, $fecha_fin_c, $huespedes, $etiquetas);
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
@@ -58,8 +67,9 @@ class ReservaController extends AbstractController
         );
         return $this->render('reserva/filter.html.twig', [
             'habitaciones' => $pagination,
-            'fecha_inicio' => $fecha_inicio,
-            'fecha_fin' => $fecha_fin,
+            'fecha_inicio' => $fecha_inicio_c,
+            'fecha_fin' => $fecha_fin_c,
+            'etiquetas' => $etiquetas,
             'huespedes' => $huespedes
         ]);
     }
@@ -68,11 +78,13 @@ class ReservaController extends AbstractController
     public function new(Request $request, ReservaRepository $reservaRepository): Response
     {
         $reserva = new Reserva();
-        $date = \DateTime::createFromFormat('Y-m-d', trim($request->query->get('fecha_inicio')));
         $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
         $reserva->setFechaInicio(\DateTime::createFromFormat('d/m/Y', strval($request->query->get('fecha_inicio'))));
         $reserva->setFechaFin(\DateTime::createFromFormat('d/m/Y', strval($request->query->get('fecha_fin'))));
-
+        $habitacion = $this->getDoctrine()
+            ->getRepository(Habitacion::class)
+            ->find($request->query->get('habitacion_id'));
+        $reserva->setHabitacion($habitacion);
         $form = $this->createForm(ReservaType::class, $reserva);
         $form->handleRequest($request);
         /*
@@ -80,12 +92,10 @@ class ReservaController extends AbstractController
             isSubmitted() comprueba si se ha enviado.
         */
         if ($form->isSubmitted() && $form->isValid()) {
+            $reserva->setLocalizador($this->generateReservationNumber());
             $reservaRepository->add($reserva, true);
-
             return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        
 
         return $this->renderForm('reserva/new.html.twig', [
             'reserva' => $reserva,
@@ -127,5 +137,9 @@ class ReservaController extends AbstractController
         }
 
         return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function generateReservationNumber(){
+        return 'CH'.date("YmdHis").'-'.rand(1, 1000);
     }
 }

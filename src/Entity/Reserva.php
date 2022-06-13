@@ -33,13 +33,13 @@ class Reserva
     #[Assert\NotBlank()]
     private $cliente;
 
-    #[ORM\ManyToMany(targetEntity: Habitacion::class, inversedBy: 'reservas')]
-    #[Assert\NotBlank()]
-    private $habitaciones;
-
     #[ORM\Column(type: 'string', length: 12)]
-    #[Assert\NotBlank()]
     private $localizador;
+
+    #[ORM\ManyToOne(targetEntity: Habitacion::class, inversedBy: 'reservas')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank()]
+    private $habitacion;
 
     public function __construct()
     {
@@ -99,26 +99,14 @@ class Reserva
         return $this;
     }
 
-    /**
-     * @return Collection<int, Habitacion>
-     */
-    public function getHabitaciones(): Collection
+    public function getLocalizador(): ?string
     {
-        return $this->habitaciones;
+        return $this->localizador;
     }
 
-    public function addHabitacione(Habitacion $habitacione): self
+    public function setLocalizador(string $localizador): self
     {
-        if (!$this->habitaciones->contains($habitacione)) {
-            $this->habitaciones[] = $habitacione;
-        }
-
-        return $this;
-    }
-
-    public function removeHabitacione(Habitacion $habitacione): self
-    {
-        $this->habitaciones->removeElement($habitacione);
+        $this->localizador = $localizador;
 
         return $this;
     }
@@ -128,14 +116,14 @@ class Reserva
         return $this->getName(); 
     }
 
-    public function getLocalizador(): ?string
+    public function getHabitacion(): ?Habitacion
     {
-        return $this->localizador;
+        return $this->habitacion;
     }
 
-    public function setLocalizador(string $localizador): self
+    public function setHabitacion(?Habitacion $habitacion): self
     {
-        $this->localizador = $localizador;
+        $this->habitacion = $habitacion;
 
         return $this;
     }

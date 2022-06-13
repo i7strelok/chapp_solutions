@@ -3,36 +3,70 @@
 {% block title %}Habitacion{% endblock %}
 
 {% block body %}
-    <h1>Habitacion</h1>
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="card bg-light p-4 rounded mb-4">  
+          <div class="row mb-4 border-bottom">
+            <div class="col p-0">
+              <legend class="mb4 text-left">Visualizando habitación</legend>
+            </div>
+             <div class="col p-0">
+                <div class="float-right p-0">
+                    <a href="{{ path('app_habitacion_index') }}" class="btn btn-sm button-color text-white" 
+                    data-toggle="tooltip" data-placement="bottom" title="Regresar al listado de habitaciones">
+                        <i class="material-icons mic">arrow_back</i>
+                    </a>
+                    <a href="{{ path('app_habitacion_edit', {'id': habitacion.id}) }}" class="btn btn-sm button-color text-white" 
+                        data-toggle="tooltip" data-placement="bottom" title="Editar">
+                        <i class="material-icons mic">edit</i>
+                    </a>
+                    {{ include('habitacion/_delete_form.html.twig') }}
+                </div>
+            </div>
+          </div>            
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ habitacion.id }}</td>
-            </tr>
-            <tr>
-                <th>Numero</th>
-                <td>{{ habitacion.numero }}</td>
-            </tr>
-            <tr>
-                <th>Descripcion</th>
-                <td>{{ habitacion.descripcion }}</td>
-            </tr>
-            <tr>
-                <th>Capacidad</th>
-                <td>{{ habitacion.capacidad }}</td>
-            </tr>
-            <tr>
-                <th>Precio_diario</th>
-                <td>{{ habitacion.precioDiario }}</td>
-            </tr>
-        </tbody>
-    </table>
+          <!-- id -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="Id">Id</label>
+            </div> 
+            <input id="Id" name="Id" type="text" class="form-control" value="{{ habitacion.id }}" disabled="true">
+          </div>
 
-    <a href="{{ path('app_habitacion_index') }}">back to list</a>
+          <!-- número -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="numero">Número</label>
+            </div>
+            <input id="numero" name="numero" type="text" class="form-control" value="{{ habitacion.numero }}" disabled="true">
+          </div>
 
-    <a href="{{ path('app_habitacion_edit', {'id': habitacion.id}) }}">edit</a>
+          <!-- capacidad -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="capacidad">Capacidad</label>
+            </div>
+            <input id="capacidad" name="capacidad" type="text" class="form-control" value="{{ habitacion.capacidad }}" disabled="true">
+          </div>
 
-    {{ include('habitacion/_delete_form.html.twig') }}
+          <!-- precio diario -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="precioDiario">Precio diario (€)</label>
+            </div>
+            <input id="precioDiario" name="precioDiario" type="text" class="form-control" value="{{ habitacion.precioDiario }}" disabled="true">
+          </div>
+
+          <!-- descripcion -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="descripcion">Descripción</label>
+            </div>
+            <input id="descripcion" name="descripcion" type="text" class="form-control" value="{{ habitacion.descripcion }}" disabled="true">
+          </div>
+
+        </div>
+      </div>
+  </div>
+</div>
 {% endblock %}

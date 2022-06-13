@@ -3,32 +3,98 @@
 {% block title %}Reserva{% endblock %}
 
 {% block body %}
-    <h1>Reserva</h1>
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="card bg-light p-4 rounded mb-4">  
+          <div class="row mb-4 border-bottom">
+            <div class="col p-0">
+              <legend class="mb4 text-left">Visualizando reserva</legend>
+            </div>
+             <div class="col p-0">
+                <div class="float-right p-0">
+                    <a href="{{ path('app_reserva_index') }}" class="btn btn-sm button-color text-white" 
+                    data-toggle="tooltip" data-placement="bottom" title="Regresar al listado de reservas">
+                        <i class="material-icons mic">arrow_back</i>
+                    </a>
+                    <a href="{{ path('app_reserva_edit', {'id': reserva.id}) }}" class="btn btn-sm button-color text-white" 
+                        data-toggle="tooltip" data-placement="bottom" title="Editar">
+                        <i class="material-icons mic">edit</i>
+                    </a>
+                    {{ include('reserva/_delete_form.html.twig') }}
+                </div>
+            </div>
+          </div>            
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ reserva.id }}</td>
-            </tr>
-            <tr>
-                <th>Fecha_inicio</th>
-                <td>{{ reserva.fechaInicio ? reserva.fechaInicio|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Fecha_fin</th>
-                <td>{{ reserva.fechaFin ? reserva.fechaFin|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Numero_huespedes</th>
-                <td>{{ reserva.numeroHuespedes }}</td>
-            </tr>
-        </tbody>
-    </table>
+          <!-- id -->
+          <h5> Detalles de la reserva </h5>
 
-    <a href="{{ path('app_reserva_index') }}">back to list</a>
+          <!-- localizador -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="localizador">Localizador</label>
+            </div>
+            <input id="localizador" name="localizador" type="text" class="form-control" value="{{ reserva.localizador }}" disabled="true">
+          </div>
 
-    <a href="{{ path('app_reserva_edit', {'id': reserva.id}) }}">edit</a>
+          <!-- fecha inicio -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="fechaInicio">Fecha inicio</label>
+            </div>
+            <input id="fechaInicio" name="fechaInicio" type="text" class="form-control" value="{{ reserva.fechaInicio.format('d/m/Y') }}" disabled="true">
+          </div>
 
-    {{ include('reserva/_delete_form.html.twig') }}
+          <!-- fecha fin -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="fechaFin">Fecha Fin</label>
+            </div>
+            <input id="fechaFin" name="fechaFin" type="text" class="form-control" value="{{ reserva.fechaFin.format('d/m/Y') }}" disabled="true">
+          </div>        
+        <h5> Información del cliente </h5>
+          <!-- cliente nombre -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="cliente">Nombre</label>
+            </div>
+            <input id="cliente" name="cliente" type="text" class="form-control" value="{{ reserva.getCliente().nombre }}" disabled="true">
+          </div>
+
+
+          <!-- cliente email -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="email">E-mail</label>
+            </div>
+            <input id="email" name="email" type="text" class="form-control" value="{{ reserva.getCliente().email }}" disabled="true">
+          </div>
+
+        <h5> Detalles de la habitación </h5>
+          <!-- descripción -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="habitacion">Habitación</label>
+            </div>
+            <input id="habitacion" name="habitacion" type="text" class="form-control" value="{{ reserva.habitacion.descripcion }}" disabled="true">
+          </div>
+
+          <!-- nº habitación -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="numero">Nº de habitación</label>
+            </div>
+            <input id="numero" name="numero" type="text" class="form-control" value="{{ reserva.habitacion.numero }}" disabled="true">
+          </div>
+
+          <!-- capacidad -->
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="capacidad">Capacidad</label>
+            </div>
+            <input id="capacidad" name="capacidad" type="text" class="form-control" value="{{ reserva.habitacion.capacidad }}" disabled="true">
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
 {% endblock %}

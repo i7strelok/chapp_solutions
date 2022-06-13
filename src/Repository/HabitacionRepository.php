@@ -40,22 +40,24 @@ class HabitacionRepository extends ServiceEntityRepository
     }
 
     public function getAllRooms(){
-        /*return $this->getEntityManager()
+        return $this->getEntityManager()
         ->createQuery('
             SELECT habitacion.id, habitacion.capacidad, habitacion.precio_diario, habitacion.descripcion, habitacion.numero
             FROM App:Habitacion habitacion
-        ');*/
-        return $this->createQueryBuilder('h')
-        ->orderBy('h.precio_diario', 'ASC')->getQuery();
+        ');
+        /*return $this->createQueryBuilder('h')
+        ->orderBy('h.precio_diario', 'ASC')->getQuery();*/
     }
 
-    public function getAvailableRooms($fecha_inicio, $fecha_fin, $huespedes){
+    public function getAvailableRooms($fecha_inicio, $fecha_fin, $huespedes, $etiquetas){
         //Solución fea
         $sql = "SELECT * FROM habitacion h WHERE h.capacidad>=$huespedes
         AND h.id NOT IN (SELECT rh.habitacion_id 
         FROM reserva_habitacion rh 
         INNER JOIN reserva r ON r.id = rh.reserva_id
-		WHERE
+        INNER JOIN habitacion_etiqueta eh ON eh.habitacion_id = h.id
+        INNER JOIN etiqueta e ON e.id = eh.etiqueta_id
+		WHERE ((e.descripcion LIKE '%".$etiquetas."%') OR (e.nombre LIKE '%".$etiquetas."%')) AND
 		(r.fecha_inicio BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."') or
 		(r.fecha_fin BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."') or 
 		('".$fecha_inicio."' BETWEEN r.fecha_inicio AND r.fecha_fin));";

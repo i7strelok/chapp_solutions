@@ -31,53 +31,53 @@ class EtiquetaController extends AbstractController
     #[Route('/new', name: 'app_etiqueta_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EtiquetaRepository $etiquetaRepository): Response
     {
-        $etiquetum = new Etiqueta();
-        $form = $this->createForm(EtiquetaType::class, $etiquetum);
+        $etiqueta = new Etiqueta();
+        $form = $this->createForm(EtiquetaType::class, $etiqueta);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $etiquetaRepository->add($etiquetum, true);
+            $etiquetaRepository->add($etiqueta, true);
 
             return $this->redirectToRoute('app_etiqueta_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('etiqueta/new.html.twig', [
-            'etiquetum' => $etiquetum,
+            'etiqueta' => $etiqueta,
             'form' => $form,
         ]);
     }
 
     #[Route('/{id}', name: 'app_etiqueta_show', methods: ['GET'])]
-    public function show(Etiqueta $etiquetum): Response
+    public function show(Etiqueta $etiqueta): Response
     {
         return $this->render('etiqueta/show.html.twig', [
-            'etiquetum' => $etiquetum,
+            'etiqueta' => $etiqueta,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_etiqueta_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Etiqueta $etiquetum, EtiquetaRepository $etiquetaRepository): Response
+    public function edit(Request $request, Etiqueta $etiqueta, EtiquetaRepository $etiquetaRepository): Response
     {
-        $form = $this->createForm(EtiquetaType::class, $etiquetum);
+        $form = $this->createForm(EtiquetaType::class, $etiqueta);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $etiquetaRepository->add($etiquetum, true);
+            $etiquetaRepository->add($etiqueta, true);
 
             return $this->redirectToRoute('app_etiqueta_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('etiqueta/edit.html.twig', [
-            'etiquetum' => $etiquetum,
+            'etiqueta' => $etiqueta,
             'form' => $form,
         ]);
     }
 
     #[Route('/{id}', name: 'app_etiqueta_delete', methods: ['POST'])]
-    public function delete(Request $request, Etiqueta $etiquetum, EtiquetaRepository $etiquetaRepository): Response
+    public function delete(Request $request, Etiqueta $etiqueta, EtiquetaRepository $etiquetaRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$etiquetum->getId(), $request->request->get('_token'))) {
-            $etiquetaRepository->remove($etiquetum, true);
+        if ($this->isCsrfTokenValid('delete'.$etiqueta->getId(), $request->request->get('_token'))) {
+            $etiquetaRepository->remove($etiqueta, true);
         }
 
         return $this->redirectToRoute('app_etiqueta_index', [], Response::HTTP_SEE_OTHER);

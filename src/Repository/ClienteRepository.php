@@ -42,7 +42,7 @@ class ClienteRepository extends ServiceEntityRepository
     public function getAllClients(){
         return $this->getEntityManager()
         ->createQuery('
-            SELECT cliente.id, cliente.Nombre, cliente.email, cliente.telefono
+            SELECT cliente.id, cliente.nombre, cliente.email, cliente.telefono
             FROM App:Cliente cliente
         ');
     }
