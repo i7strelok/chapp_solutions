@@ -58,8 +58,11 @@ class ReservaController extends AbstractController
         }          
         $fecha_fin_c = date("Y-m-d", strtotime($fecha_fin));
         $fecha_inicio_c = date("Y-m-d", strtotime($fecha_inicio));
+        #Creamos la fecha según el formato de entrada
+        $iDate = \DateTime::createFromFormat('d/m/Y', $fecha_inicio);
+        $fDate = \DateTime::createFromFormat('d/m/Y', $fecha_fin);
         $query = $this->getDoctrine()
-        ->getRepository(Habitacion::class)->getAvailableRooms($fecha_inicio_c, $fecha_fin_c, $huespedes, $etiquetas);
+        ->getRepository(Habitacion::class)->getAvailableRooms($iDate->format('Y-m-d'), $fDate->format('Y-m-d'), $huespedes, $etiquetas);
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
@@ -67,8 +70,8 @@ class ReservaController extends AbstractController
         );
         return $this->render('reserva/filter.html.twig', [
             'habitaciones' => $pagination,
-            'fecha_inicio' => $fecha_inicio_c,
-            'fecha_fin' => $fecha_fin_c,
+            'fecha_inicio' => $fecha_inicio,
+            'fecha_fin' => $fecha_fin,
             'etiquetas' => $etiquetas,
             'huespedes' => $huespedes
         ]);

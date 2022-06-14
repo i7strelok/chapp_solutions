@@ -59,8 +59,8 @@ class HabitacionRepository extends ServiceEntityRepository
         INNER JOIN etiqueta e ON e.id = eh.etiqueta_id
 		WHERE ((e.descripcion LIKE '%".$etiquetas."%') OR (e.nombre LIKE '%".$etiquetas."%')) AND
 		(r.fecha_inicio BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."') or
-		(r.fecha_fin BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."') or 
-		('".$fecha_inicio."' BETWEEN r.fecha_inicio AND r.fecha_fin));";
+		(r.fecha_fin BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."')
+		);";
         $em = $this->getEntityManager();
         return $em->getConnection()->fetchAllAssociative($sql);
     }

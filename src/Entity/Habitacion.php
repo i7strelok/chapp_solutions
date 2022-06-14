@@ -28,12 +28,11 @@ class Habitacion
     #[Assert\NotBlank()]
     private $capacidad;
 
-    #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
+    #[ORM\Column(type: 'float', precision: 5, scale: 2)]
     #[Assert\NotBlank()]
     private $precio_diario;
 
     #[ORM\ManyToMany(targetEntity: Etiqueta::class, inversedBy: 'habitaciones')]
-    #[Assert\NotBlank()]
     private $etiquetas;
 
     #[ORM\OneToMany(mappedBy: 'habitacion', targetEntity: Reserva::class)]

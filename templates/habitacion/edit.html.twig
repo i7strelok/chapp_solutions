@@ -1,13 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Habitacion{% endblock %}
+{% block title %}Editar habitación{% endblock %}
 
 {% block body %}
-    <h1>Edit Habitacion</h1>
-
-    {{ include('habitacion/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_habitacion_index') }}">back to list</a>
-
-    {{ include('habitacion/_delete_form.html.twig') }}
+    {% for message in app.flashes('exito') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-canter">
+            <div class = "col-6 bg-white rounded my-3 p-5">
+                <a href="{{ path('app_habitacion_index') }}" class="btn btn-sm button-color text-white" 
+                    data-toggle="tooltip" data-placement="bottom" title="Regresar al listado de habitaciones">
+                        <i class="material-icons mic">arrow_back</i>
+                </a>
+                <h1>Editar habitación</h1>
+                {{ include('habitacion/_form.html.twig') }}
+            </div>
+        </div>
+    </div>
 {% endblock %}
