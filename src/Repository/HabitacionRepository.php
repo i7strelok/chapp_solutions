@@ -51,16 +51,7 @@ class HabitacionRepository extends ServiceEntityRepository
 
     public function getAvailableRooms($fecha_inicio, $fecha_fin, $huespedes, $etiquetas){
         //Solución fea
-        $sql = "SELECT * FROM habitacion h WHERE h.capacidad>=$huespedes
-        AND h.id NOT IN (SELECT rh.habitacion_id 
-        FROM reserva_habitacion rh 
-        INNER JOIN reserva r ON r.id = rh.reserva_id
-        INNER JOIN habitacion_etiqueta eh ON eh.habitacion_id = h.id
-        INNER JOIN etiqueta e ON e.id = eh.etiqueta_id
-		WHERE ((e.descripcion LIKE '%".$etiquetas."%') OR (e.nombre LIKE '%".$etiquetas."%')) AND
-		(r.fecha_inicio BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."') or
-		(r.fecha_fin BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."')
-		);";
+        $sql = "SELECT * FROM habitacion h";
         $em = $this->getEntityManager();
         return $em->getConnection()->fetchAllAssociative($sql);
     }
