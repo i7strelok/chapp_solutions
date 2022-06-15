@@ -15,7 +15,7 @@ use Knp\Component\Pager\PaginatorInterface;
 
 class ReservaController extends AbstractController
 {
-    #[Route('/reserva/', name: 'app_reserva_index', methods: ['GET'])]
+    #[Route('/', name: 'app_reserva_index', methods: ['GET'])]
     public function index(ReservaRepository $reservaRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $query = $reservaRepository->getAllBookings();
