@@ -29,7 +29,7 @@ class ReservaController extends AbstractController
         ]);
     }
 
-    #[Route('/reserva/filter', name: 'app_reserva_filter', methods: ['GET'])]
+    #[Route('/reserva/filter/', name: 'app_reserva_filter', methods: ['GET'])]
     public function filter(Request $request, ReservaRepository $reservaRepository, PaginatorInterface $paginator): Response
     {
         $fecha_inicio = ''; $fecha_fin = ''; $huespedes = ''; $etiquetas = '';
