@@ -13,10 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 
-#[Route('/reserva')]
 class ReservaController extends AbstractController
 {
-    #[Route('/', name: 'app_reserva_index', methods: ['GET'])]
+    #[Route('/reserva/', name: 'app_reserva_index', methods: ['GET'])]
     public function index(ReservaRepository $reservaRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $query = $reservaRepository->getAllBookings();
@@ -30,7 +29,7 @@ class ReservaController extends AbstractController
         ]);
     }
 
-    #[Route('/filter', name: 'app_reserva_filter', methods: ['GET'])]
+    #[Route('/reserva/filter', name: 'app_reserva_filter', methods: ['GET'])]
     public function filter(Request $request, ReservaRepository $reservaRepository, PaginatorInterface $paginator): Response
     {
         $fecha_inicio = ''; $fecha_fin = ''; $huespedes = ''; $etiquetas = '';
@@ -77,7 +76,7 @@ class ReservaController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_reserva_new', methods: ['GET', 'POST'])]
+    #[Route('/reserva/new', name: 'app_reserva_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ReservaRepository $reservaRepository): Response
     {
         $reserva = new Reserva();
@@ -106,7 +105,7 @@ class ReservaController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_reserva_show', methods: ['GET'])]
+    #[Route('/reserva/{id}', name: 'app_reserva_show', methods: ['GET'])]
     public function show(Reserva $reserva): Response
     {
         return $this->render('reserva/show.html.twig', [
@@ -114,7 +113,7 @@ class ReservaController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_reserva_edit', methods: ['GET', 'POST'])]
+    #[Route('/reserva/{id}/edit', name: 'app_reserva_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Reserva $reserva, ReservaRepository $reservaRepository): Response
     {
         $form = $this->createForm(ReservaType::class, $reserva);
@@ -132,7 +131,7 @@ class ReservaController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_reserva_delete', methods: ['POST'])]
+    #[Route('/reserva/{id}', name: 'app_reserva_delete', methods: ['POST'])]
     public function delete(Request $request, Reserva $reserva, ReservaRepository $reservaRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$reserva->getId(), $request->request->get('_token'))) {
