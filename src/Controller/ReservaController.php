@@ -77,17 +77,19 @@ class ReservaController extends AbstractController
     #[Route('/reserva/new', name: 'app_reserva_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ReservaRepository $reservaRepository): Response
     {
+        $huespedes = 2;
+        $habitacion_id = 3;
         $reserva = new Reserva();
-        $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
-        $iDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_inicio'));
-        $fDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_fin'));
+        $reserva->setNumeroHuespedes($huespedes); 
+        $iDate = \DateTime::createFromFormat('d/m/Y', '10/10/2022');
+        $fDate = \DateTime::createFromFormat('d/m/Y', '12/10/2022');
         $iiDate = \DateTime::createFromFormat('Y-m-d', $iDate->format('Y-m-d'));
         $ffDate = \DateTime::createFromFormat('Y-m-d', $fDate->format('Y-m-d'));
         $reserva->setFechaInicio($iiDate);
         $reserva->setFechaFin($ffDate);
         $habitacion = $this->getDoctrine()
             ->getRepository(Habitacion::class)
-            ->find($request->query->get('habitacion_id'));
+            ->find($habitacion_id);
         $reserva->setHabitacion($habitacion);
         $form = $this->createForm(ReservaType::class, $reserva);
         $form->handleRequest($request);
