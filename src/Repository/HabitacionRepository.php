@@ -55,8 +55,10 @@ class HabitacionRepository extends ServiceEntityRepository
         $sub = $em->createQueryBuilder();
         $sub->select('IDENTITY(r.habitacion)')
           ->from('App:Reserva', 'r')
-          ->where(':fecha_inicio >= r.fecha_inicio and :fecha_inicio <= r.fecha_fin')
-          ->AndWhere(':fecha_fin > r.fecha_inicio and :fecha_fin < r.fecha_fin');  
+          ->where(':fecha_inicio >= r.fecha_inicio')
+          ->AndWhere(':fecha_inicio <= r.fecha_fin')
+          ->AndWhere(':fecha_fin > r.fecha_inicio')
+          ->AndWhere(':fecha_fin < r.fecha_fin');  
         /*  ->add('where', $qb->expr()->between(
             'r.fecha_inicio',
             ':fecha_inicio',
