@@ -65,12 +65,12 @@ class HabitacionRepository extends ServiceEntityRepository
         ->from('App:Habitacion','h')
         ->innerJoin('h.reservas','rh')
         ->innerJoin('h.etiquetas','e')
-        ->where($qb->expr()->like('e.nombre', ':etiquetas'))   
+        /*->where($qb->expr()->like('e.nombre', ':etiquetas'))   
         ->orWhere($qb->expr()->like('e.descripcion', ':etiquetas'))
-        ->orWhere($qb->expr()->like('h.descripcion', ':etiquetas'))
-        ->Andwhere('h.capacidad >= :capacidad')
+        ->orWhere($qb->expr()->like('h.descripcion', ':etiquetas'))*/
+        ->where('h.capacidad >= :capacidad')
         ->Andwhere($qb->expr()->notIn('h.id',  $sub->getDQL()))
-        ->setParameters(['capacidad' => $huespedes, 'etiquetas' => '%'.$etiquetas.'%', 
+        ->setParameters(['capacidad' => $huespedes,
         'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin]);
 
         return $qb->getQuery();
