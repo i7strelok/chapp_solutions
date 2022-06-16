@@ -61,14 +61,17 @@ class HabitacionRepository extends ServiceEntityRepository
                 $sub->expr()->between(':fecha_inicio', 'r.fecha_inicio', 'r.fecha_fin')
             )
         );
-        
+
         $qb->select("h")
         ->from('App:Habitacion','h')
         ->innerJoin('h.reservas','rh')
         ->innerJoin('h.etiquetas','e')
-        ->where($qb->expr()->like('e.nombre', ':etiquetas'))   
-        ->orWhere($qb->expr()->like('e.descripcion', ':etiquetas'))
-        ->orWhere($qb->expr()->like('h.descripcion', ':etiquetas'))
+        ->add('where', $qb->expr()->orX(
+            $qb->expr()->like('e.nombre', ':etiquetas'),
+            $qb->expr()->like('e.descripcion', ':etiquetas'),
+            $qb->expr()->like('h.descripcion', ':etiquetas')
+            )
+        )   
         ->Andwhere('h.capacidad >= :capacidad')
         ->Andwhere($qb->expr()->notIn('h.id',  $sub->getDQL()))
         ->setParameters(['capacidad' => $huespedes, 'etiquetas' => '%'.$etiquetas.'%', 
