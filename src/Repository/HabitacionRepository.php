@@ -64,7 +64,6 @@ class HabitacionRepository extends ServiceEntityRepository
 
         $qb->select("h")
         ->from('App:Habitacion','h')
-        ->innerJoin('h.reservas','rh')
         ->innerJoin('h.etiquetas','e')
         ->add('where', $qb->expr()->orX(
             $qb->expr()->like('e.nombre', ':etiquetas'),
