@@ -159,6 +159,6 @@ class ReservaController extends AbstractController
     private function checkdate($date) {
         $tempDate = explode('/', $date);
         // checkdate(month, day, year)
-        return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
+        return checkdate($tempDate[1], $tempDate[0], $tempDate[2]);
       }
 }
