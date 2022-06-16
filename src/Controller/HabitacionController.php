@@ -21,7 +21,7 @@ class HabitacionController extends AbstractController
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            1 /*límite de registros por página*/
+            6 /*límite de registros por página*/
         );
         return $this->render('habitacion/index.html.twig', [
             'habitaciones' => $pagination

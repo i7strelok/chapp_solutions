@@ -63,7 +63,7 @@ class ReservaController extends AbstractController
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            10 /*límite de registros por página*/
+            6 /*límite de registros por página*/
         );
         return $this->render('reserva/filter.html.twig', [
             'habitaciones' => $pagination,
