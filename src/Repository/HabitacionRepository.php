@@ -53,25 +53,13 @@ class HabitacionRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
         $sub = $em->createQueryBuilder();
+        $orX = $sub->expr()->orX();
+        $orX->add($qb->expr()->between('r.fecha_inicio ', ':fecha_inicio', ':fecha_fin'));
+        $orX->add($qb->expr()->between('r.fecha_fin', ':fecha_inicio', ':fecha_fin'));
+        $orX->add($qb->expr()->between(':fecha_inicio', 'r.fecha_inicio', 'r.fecha_fin'));
         $sub->select('IDENTITY(r.habitacion)')
-          ->from('App:Reserva', 'r')
-          ->where(':fecha_inicio >= r.fecha_inicio')
-          ->AndWhere(':fecha_inicio <= r.fecha_fin')
-          ->AndWhere(':fecha_fin > r.fecha_inicio')
-          ->AndWhere(':fecha_fin < r.fecha_fin');  
-        /*  ->add('where', $qb->expr()->between(
-            'r.fecha_inicio',
-            ':fecha_inicio',
-            ':fecha_fin'
-            )       
-        )
-        ->add('OrWhere', $qb->expr()->between(
-            'r.fecha_fin',
-            ':fecha_inicio',
-            ':fecha_fin'
-            )       
-        );*/
-      
+        ->from('App:Reserva', 'r') 
+        ->where($orX);
           //->where($qb->expr()->eq('arl.asset_id',1));
         $qb->select("h")
         ->from('App:Habitacion','h')
