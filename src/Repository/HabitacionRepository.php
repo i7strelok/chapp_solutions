@@ -53,24 +53,26 @@ class HabitacionRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
         $sub = $em->createQueryBuilder();
-        $orX = $sub->expr()->orX();
-        $orX->add($qb->expr()->between('r.fecha_inicio ', ':fecha_inicio', ':fecha_fin'));
-        $orX->add($qb->expr()->between('r.fecha_fin', ':fecha_inicio', ':fecha_fin'));
-        $orX->add($qb->expr()->between(':fecha_inicio', 'r.fecha_inicio', 'r.fecha_fin'));
         $sub->select('IDENTITY(r.habitacion)')
         ->from('App:Reserva', 'r') 
-        ->where($orX);
+        ->Where(
+            $sub->expr()->orX(
+                $qb->expr()->between('r.fecha_inicio ', ':fecha_inicio', ':fecha_fin'),
+                $qb->expr()->between('r.fecha_fin', ':fecha_inicio', ':fecha_fin'),
+                $qb->expr()->between(':fecha_inicio', 'r.fecha_inicio', 'r.fecha_fin')
+            )
+        );
           //->where($qb->expr()->eq('arl.asset_id',1));
         $qb->select("h")
         ->from('App:Habitacion','h')
         ->innerJoin('h.reservas','rh')
         ->innerJoin('h.etiquetas','e')
-        /*->where($qb->expr()->like('e.nombre', ':etiquetas'))   
+        ->where($qb->expr()->like('e.nombre', ':etiquetas'))   
         ->orWhere($qb->expr()->like('e.descripcion', ':etiquetas'))
-        ->orWhere($qb->expr()->like('h.descripcion', ':etiquetas'))*/
-        ->where('h.capacidad >= :capacidad')
+        ->orWhere($qb->expr()->like('h.descripcion', ':etiquetas'))
+        ->Andwhere('h.capacidad >= :capacidad')
         ->Andwhere($qb->expr()->notIn('h.id',  $sub->getDQL()))
-        ->setParameters(['capacidad' => $huespedes,
+        ->setParameters(['capacidad' => $huespedes, 'etiquetas' => '%'.$etiquetas.'%', 
         'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin]);
 
         return $qb->getQuery();
