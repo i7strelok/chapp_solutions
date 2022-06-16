@@ -78,17 +78,26 @@ class ReservaController extends AbstractController
     public function new(Request $request, ReservaRepository $reservaRepository): Response
     {
         $reserva = new Reserva();
-        $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
-        $iDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_inicio'));
-        $fDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_fin'));
-        $iiDate = \DateTime::createFromFormat('Y-m-d', $iDate->format('Y-m-d'));
-        $ffDate = \DateTime::createFromFormat('Y-m-d', $fDate->format('Y-m-d'));
-        $reserva->setFechaInicio($iiDate);
-        $reserva->setFechaFin($ffDate);
-        $habitacion = $this->getDoctrine()
+        if($request->query->has('fecha_inicio') && $this->checkdate($request->query->get('fecha_inicio'))){
+            $iDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_inicio'));
+            $iiDate = \DateTime::createFromFormat('Y-m-d', $iDate->format('Y-m-d'));
+            $reserva->setFechaInicio($iiDate);
+            
+        }
+        if($request->query->has('fecha_fin') && $this->checkdate($request->query->get('fecha_fin'))){
+            $fDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_fin'));
+            $ffDate = \DateTime::createFromFormat('Y-m-d', $fDate->format('Y-m-d'));
+            $reserva->setFechaFin($ffDate);
+        }
+        if($request->query->has('huespedes') && is_numeric($request->query->get('huespedes'))){
+            $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
+        }
+        if($request->query->has('habitacion_id') && is_numeric($request->query->get('habitacion_id'))){
+            $habitacion = $this->getDoctrine()
             ->getRepository(Habitacion::class)
             ->find($request->query->get('habitacion_id'));
-        $reserva->setHabitacion($habitacion);
+            $reserva->setHabitacion($habitacion);
+        }
         $form = $this->createForm(ReservaType::class, $reserva);
         $form->handleRequest($request);
         /*
@@ -96,7 +105,7 @@ class ReservaController extends AbstractController
             isSubmitted() comprueba si se ha enviado.
         */
         if ($form->isSubmitted() && $form->isValid()) {
-            $reserva->setLocalizador($this->generateReservationNumber());
+            $reserva->setLocalizador('xfsdf34');
             $reservaRepository->add($reserva, true);
             return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -146,4 +155,10 @@ class ReservaController extends AbstractController
     private function generateReservationNumber(){
         return 'CH'.date("mdHis").'-'.rand(1, 1000);
     }
+
+    private function checkdate($date) {
+        $tempDate = explode('/', $date);
+        // checkdate(month, day, year)
+        return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
+      }
 }
