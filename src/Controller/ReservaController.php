@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use \Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ReservaController extends AbstractController
 {
@@ -33,27 +34,26 @@ class ReservaController extends AbstractController
     public function filter(Request $request, ReservaRepository $reservaRepository, PaginatorInterface $paginator): Response
     {
         $fecha_inicio = ''; $fecha_fin = ''; $huespedes = ''; $etiquetas = '';
-        if($request->query->has('fecha_inicio') == null){ 
-            //$fecha_inicio = \DateTime::createFromFormat('d/m/Y', strval(date('d/m/Y')));
-            $fecha_inicio = strval(date('d/m/Y'));
-        }else{
+
+        if($request->query->has('fecha_inicio') != null && $this->checkdate($request->query->get('fecha_inicio'))){
             $fecha_inicio = $request->query->get('fecha_inicio');
+        }else{
+            $fecha_inicio = strval(date('d/m/Y'));
         }
-        if($request->query->has('fecha_fin') == null){ 
-            //$fecha_fin = \DateTime::createFromFormat('d/m/Y', strval(date("d-m-Y", strtotime(date('d-m-Y')."+ 7 days")))); 
-            $fecha_fin = strval(date("d/m/Y", strtotime(date('d-m-Y')."+ 7 days"))); 
+        if($request->query->has('fecha_fin') != null && $this->checkdate($request->query->get('fecha_fin'))){
+            $fecha_fin = $request->query->get('fecha_fin'); 
         }else{
-            $fecha_fin = $request->query->get('fecha_fin');
-        }   
-        if($request->query->has('huespedes') == null){ 
-            $huespedes = 2;
-        }else{
+            $fecha_fin = strval(date("d/m/Y", strtotime(date('d-m-Y')."+ 7 days")));
+        } 
+        if($request->query->has('huespedes') != null && is_numeric($request->query->get('huespedes'))){  
             $huespedes = $request->query->get('huespedes');
-        }  
-        if($request->query->has('etiquetas') == null){ 
-            $etiquetas = '';
         }else{
+            $huespedes = 2;
+        } 
+        if($request->query->has('etiquetas') != null){ 
             $etiquetas = $request->query->get('etiquetas');
+        }else{
+            $etiquetas = '';
         }          
         #Creamos la fecha según el formato de entrada
         $iDate = \DateTime::createFromFormat('d/m/Y', $fecha_inicio);
@@ -78,25 +78,45 @@ class ReservaController extends AbstractController
     public function new(Request $request, ReservaRepository $reservaRepository): Response
     {
         $reserva = new Reserva();
-        if($request->query->has('fecha_inicio') && $this->checkdate($request->query->get('fecha_inicio'))){
+        if($request->query->has('fecha_inicio') != null && $this->checkdate($request->query->get('fecha_inicio'))){
             $iDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_inicio'));
             $iiDate = \DateTime::createFromFormat('Y-m-d', $iDate->format('Y-m-d'));
-            $reserva->setFechaInicio($iiDate);
-            
+            $reserva->setFechaInicio($iiDate);     
+        }else{
+            throw $this->createNotFoundException(
+                'Fecha de inicio no válida.'
+            );
         }
-        if($request->query->has('fecha_fin') && $this->checkdate($request->query->get('fecha_fin'))){
+        if($request->query->has('fecha_fin') != null && $this->checkdate($request->query->get('fecha_fin'))){
             $fDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_fin'));
             $ffDate = \DateTime::createFromFormat('Y-m-d', $fDate->format('Y-m-d'));
             $reserva->setFechaFin($ffDate);
+        }else{
+            throw $this->createNotFoundException(
+                'Fecha de fin no válida.'
+            );
         }
-        if($request->query->has('huespedes') && is_numeric($request->query->get('huespedes'))){
+        if($request->query->has('huespedes') != null && is_numeric($request->query->get('huespedes'))){
             $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
+        }else{
+            throw $this->createNotFoundException(
+                'Número de huéspedes no válido.'
+            );
         }
-        if($request->query->has('habitacion_id') && is_numeric($request->query->get('habitacion_id'))){
+        if($request->query->has('habitacion_id') != null && is_numeric($request->query->get('habitacion_id'))){
             $habitacion = $this->getDoctrine()
             ->getRepository(Habitacion::class)
             ->find($request->query->get('habitacion_id'));
             $reserva->setHabitacion($habitacion);
+            if (!$habitacion) {
+                throw $this->createNotFoundException(
+                    'Habitación no encontrada'
+                );
+            }
+        }else{
+            throw $this->createNotFoundException(
+                'Habitación no válida.'
+            );
         }
         $form = $this->createForm(ReservaType::class, $reserva);
         $form->handleRequest($request);
@@ -105,7 +125,7 @@ class ReservaController extends AbstractController
             isSubmitted() comprueba si se ha enviado.
         */
         if ($form->isSubmitted() && $form->isValid()) {
-            $reserva->setLocalizador('xfsdf34');
+            $reserva->setLocalizador('xfsdf3554');
             $reservaRepository->add($reserva, true);
             return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
         }
