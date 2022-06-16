@@ -55,8 +55,6 @@ class ReservaController extends AbstractController
         }else{
             $etiquetas = $request->query->get('etiquetas');
         }          
-        $fecha_fin_c = date("Y-m-d", strtotime($fecha_fin));
-        $fecha_inicio_c = date("Y-m-d", strtotime($fecha_inicio));
         #Creamos la fecha según el formato de entrada
         $iDate = \DateTime::createFromFormat('d/m/Y', $fecha_inicio);
         $fDate = \DateTime::createFromFormat('d/m/Y', $fecha_fin);
@@ -81,8 +79,12 @@ class ReservaController extends AbstractController
     {
         $reserva = new Reserva();
         $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
-        $reserva->setFechaInicio(\DateTime::createFromFormat('d/m/Y', strval($request->query->get('fecha_inicio'))));
-        $reserva->setFechaFin(\DateTime::createFromFormat('d/m/Y', strval($request->query->get('fecha_fin'))));
+        $iDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_inicio'));
+        $fDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_fin'));
+        $iiDate = \DateTime::createFromFormat('Y-m-d', $iDate->format('Y-m-d'));
+        $ffDate = \DateTime::createFromFormat('Y-m-d', $fDate->format('Y-m-d'));
+        $reserva->setFechaInicio($iiDate);
+        $reserva->setFechaFin($ffDate);
         $habitacion = $this->getDoctrine()
             ->getRepository(Habitacion::class)
             ->find($request->query->get('habitacion_id'));
@@ -142,6 +144,6 @@ class ReservaController extends AbstractController
     }
 
     private function generateReservationNumber(){
-        return 'CH'.date("YmdHis").'-'.rand(1, 1000);
+        return 'CH'.date("mdHis").'-'.rand(1, 1000);
     }
 }
