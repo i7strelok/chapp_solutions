@@ -25,7 +25,7 @@ class Cliente
     #[Assert\NotBlank()]
     private $email;
 
-    #[ORM\Column(type: 'smallint')]
+    #[ORM\Column(type: 'int')]
     private $telefono;
 
     #[ORM\OneToMany(mappedBy: 'cliente', targetEntity: Reserva::class)]
