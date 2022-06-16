@@ -72,7 +72,7 @@ class HabitacionRepository extends ServiceEntityRepository
             $qb->expr()->like('h.descripcion', ':etiquetas')
             )
         )   
-        ->Andwhere('h.capacidad >= :capacidad')
+        ->Andwhere($qb->expr()->gte('h.capacidad', ':capacidad'))
         ->Andwhere($qb->expr()->notIn('h.id',  $sub->getDQL()))
         ->setParameters(['capacidad' => $huespedes, 'etiquetas' => '%'.$etiquetas.'%', 
         'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin]);
