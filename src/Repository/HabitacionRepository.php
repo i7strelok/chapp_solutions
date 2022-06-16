@@ -50,19 +50,40 @@ class HabitacionRepository extends ServiceEntityRepository
     }
 
     public function getAvailableRooms($fecha_inicio, $fecha_fin, $huespedes, $etiquetas){
-        //Solución fea
-        $sql = "SELECT * FROM habitacion h WHERE h.capacidad>=$huespedes
-        AND h.id NOT IN (SELECT rh.habitacion_id 
-        FROM reserva_habitacion rh 
-        INNER JOIN reserva r ON r.id = rh.reserva_id
-        INNER JOIN habitacion_etiqueta eh ON eh.habitacion_id = h.id
-        INNER JOIN etiqueta e ON e.id = eh.etiqueta_id
-		WHERE ((e.descripcion LIKE '%".$etiquetas."%') OR (e.nombre LIKE '%".$etiquetas."%')) AND
-		(r.fecha_inicio BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."') or
-		(r.fecha_fin BETWEEN '".$fecha_inicio."' AND '".$fecha_fin."')
-		)";
         $em = $this->getEntityManager();
-        return $em->getConnection()->fetchAllAssociative($sql);
+        $qb = $em->createQueryBuilder();
+        $sub = $em->createQueryBuilder();
+        $sub->select('IDENTITY(r.habitacion)')
+          ->from('App:Reserva', 'r')
+          ->where(':fecha_inicio >= r.fecha_inicio and :fecha_inicio <= r.fecha_fin')
+          ->AndWhere(':fecha_fin > r.fecha_inicio and :fecha_fin < r.fecha_fin');  
+        /*  ->add('where', $qb->expr()->between(
+            'r.fecha_inicio',
+            ':fecha_inicio',
+            ':fecha_fin'
+            )       
+        )
+        ->add('OrWhere', $qb->expr()->between(
+            'r.fecha_fin',
+            ':fecha_inicio',
+            ':fecha_fin'
+            )       
+        );*/
+      
+          //->where($qb->expr()->eq('arl.asset_id',1));
+        $qb->select("h")
+        ->from('App:Habitacion','h')
+        ->innerJoin('h.reservas','rh')
+        ->innerJoin('h.etiquetas','e')
+        ->where($qb->expr()->like('e.nombre', ':etiquetas'))   
+        ->orWhere($qb->expr()->like('e.descripcion', ':etiquetas'))
+        ->orWhere($qb->expr()->like('h.descripcion', ':etiquetas'))
+        ->Andwhere('h.capacidad >= :capacidad')
+        ->Andwhere($qb->expr()->notIn('h.id',  $sub->getDQL()))
+        ->setParameters(['capacidad' => $huespedes, 'etiquetas' => '%'.$etiquetas.'%', 
+        'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin]);
+
+        return $qb->getQuery();
     }
 //    /**
 //     * @return Habitacion[] Returns an array of Habitacion objects
