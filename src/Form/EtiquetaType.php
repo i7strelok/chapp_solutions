@@ -32,7 +32,7 @@ class EtiquetaType extends AbstractType
             ])
             ->add('habitaciones', null, [
                 'label' => 'Seleccione las habitaciones',
-                'required' => true,
+                'required' => false,
             ])
             ->add('Guardar', SubmitType::class, [
                 'attr' => ['class' => 'btn button-color text-white'],
