@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Validator\Constraints as Assert;
 class ReservaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -27,6 +28,11 @@ class ReservaType extends AbstractType
                 'html5' => false,
                 'required' => true,
                 'attr' => ['class' => 'disabled'],
+                'constraints' => [
+                    new Assert\GreaterThan([
+                         'propertyPath' => 'parent.all[fecha_inicio].data'
+                        ]),
+                ],
                 'invalid_message' => 'La fecha de finalización de la reserva es obligatoria.',
             ])
             ->add('numero_huespedes', null, [
