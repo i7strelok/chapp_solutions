@@ -117,24 +117,24 @@ class ReservaController extends AbstractController
                     $reserva->setFechaFin($ffDate);
                     $reserva->setFechaInicio($iiDate);
                 }else{
-                    throw new \Exception(
+                    throw $this->createNotFoundException(
                         'Fecha de fin no puede ser inferior o igual a la fecha de inicio.'
                     );                    
                 }
             }else{
-                throw new \Exception(
+                throw $this->createNotFoundException(
                     'Fecha de fin no válida.'
                 );
             }
         }else{
-            throw new \Exception(
+            throw $this->createNotFoundException(
                 'Fecha de inicio no válida.'
             );
         }
         if($request->query->has('huespedes') != null && is_numeric($request->query->get('huespedes'))){
             $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
         }else{
-            throw new \Exception(
+            throw $this->createNotFoundException(
                 'Número de huéspedes no válido.'
             );
         }
@@ -143,12 +143,12 @@ class ReservaController extends AbstractController
             ->getRepository(Habitacion::class)
             ->find($request->query->get('habitacion_id'));
             if (!$habitacion) {
-                throw new \Exception(
+                throw $this->createNotFoundException(
                     'Habitación no encontrada'
                 );
             }else $reserva->setHabitacion($habitacion);
         }else{
-            throw new \Exception(
+            throw $this->createNotFoundException(
                 'Habitación no válida.'
             );
         }
@@ -171,7 +171,7 @@ class ReservaController extends AbstractController
                 $reservaRepository->add($reserva, true);
                 return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
             }else{
-                throw new \Exception(
+                throw $this->createNotFoundException(
                     'Habitación no disponible.'
                 );
             }
