@@ -125,7 +125,7 @@ class ReservaController extends AbstractController
             isSubmitted() comprueba si se ha enviado.
         */
         if ($form->isSubmitted() && $form->isValid()) {
-            $reserva->setLocalizador($this->generateReservationNumber());
+            $reserva->setLocalizador('testasdasd');
             $reservaRepository->add($reserva, true);
             return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
         }
