@@ -33,20 +33,32 @@ class ReservaController extends AbstractController
     #[Route('/reserva/filter/', name: 'app_reserva_filter', methods: ['GET'])]
     public function filter(Request $request, ReservaRepository $reservaRepository, PaginatorInterface $paginator): Response
     {
-        $fecha_inicio = ''; $fecha_fin = ''; $huespedes = ''; $etiquetas = '';
-
-        if($request->query->has('fecha_inicio') != null && $this->checkdate($request->query->get('fecha_inicio'))){
-            $fecha_inicio = $request->query->get('fecha_inicio');
+        //Solución no elegante por falta de tiempo.
+        $fecha_inicio = ''; $fecha_fin = ''; $huespedes = ''; $etiquetas = ''; $errors = [];
+        if($request->query->has('fecha_inicio') != null){
+            if($this->checkdate($request->query->get('fecha_inicio'))){
+                $fecha_inicio = $request->query->get('fecha_inicio');
+            }else{
+                $errors[]='Fecha de inicio de reserva debe ser una fecha con formato d/m/Y.';
+            }
         }else{
             $fecha_inicio = strval(date('d/m/Y'));
         }
-        if($request->query->has('fecha_fin') != null && $this->checkdate($request->query->get('fecha_fin'))){
-            $fecha_fin = $request->query->get('fecha_fin'); 
+        if($request->query->has('fecha_fin') != null){
+            if ($this->checkdate($request->query->get('fecha_fin'))) {
+                $fecha_fin = $request->query->get('fecha_fin');
+            }else{
+                $errors[]='Fecha de fin de reserva debe ser una fecha con formato d/m/Y.';
+            }
         }else{
             $fecha_fin = strval(date("d/m/Y", strtotime(date('d-m-Y')."+ 7 days")));
         } 
-        if($request->query->has('huespedes') != null && is_numeric($request->query->get('huespedes'))){  
-            $huespedes = $request->query->get('huespedes');
+        if($request->query->has('huespedes') != null){
+            if(is_numeric($request->query->get('huespedes'))){  
+                $huespedes = $request->query->get('huespedes');
+            }else{
+                $errors[]='Huéspedes debe ser un valor numérico.';
+            }
         }else{
             $huespedes = 2;
         } 
@@ -54,29 +66,45 @@ class ReservaController extends AbstractController
             $etiquetas = $request->query->get('etiquetas');
         }else{
             $etiquetas = '';
-        }          
-        #Creamos la fecha según el formato de entrada
-        $iDate = \DateTime::createFromFormat('d/m/Y', $fecha_inicio);
-        $fDate = \DateTime::createFromFormat('d/m/Y', $fecha_fin);
-        $query = $this->getDoctrine()
-        ->getRepository(Habitacion::class)->getAvailableRooms($iDate->format('Y-m-d'), $fDate->format('Y-m-d'), $huespedes, $etiquetas);
-        $pagination = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            6 /*límite de registros por página*/
-        );
+        }
+        if (count($errors) == 0)
+        {
+            $iDate = \DateTime::createFromFormat('d/m/Y', $fecha_inicio);
+            $fDate = \DateTime::createFromFormat('d/m/Y', $fecha_fin);
+            if (strtotime($fDate->format('Y-m-d')) > strtotime($iDate->format('Y-m-d')))
+            {
+                $query = $this->getDoctrine()
+                ->getRepository(Habitacion::class)->getAvailableRooms($iDate->format('Y-m-d'), $fDate->format('Y-m-d'), $huespedes, $etiquetas);
+                $pagination = $paginator->paginate(
+                    $query,
+                    $request->query->getInt('page', 1),
+                    6 /*límite de registros por página*/
+                );
+                return $this->render('reserva/filter.html.twig', [
+                'habitaciones' => $pagination,
+                'fecha_inicio' => $fecha_inicio,
+                'fecha_fin' => $fecha_fin,
+                'etiquetas' => $etiquetas,
+                'huespedes' => $huespedes,
+                'errors' => $errors,
+                ]);
+            } else {
+                $errors[]= 'Fecha de fin no puede ser inferior o igual a la fecha de inicio.';
+            }
+        }
         return $this->render('reserva/filter.html.twig', [
-            'habitaciones' => $pagination,
             'fecha_inicio' => $fecha_inicio,
             'fecha_fin' => $fecha_fin,
             'etiquetas' => $etiquetas,
-            'huespedes' => $huespedes
+            'huespedes' => $huespedes,
+            'errors' => $errors,
         ]);
     }
 
     #[Route('/reserva/new', name: 'app_reserva_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ReservaRepository $reservaRepository): Response
     {
+        //Solución no elegante por falta de tiempo.
         $reserva = new Reserva();
         if($request->query->has('fecha_inicio') != null && $this->checkdate($request->query->get('fecha_inicio')))
         {   
