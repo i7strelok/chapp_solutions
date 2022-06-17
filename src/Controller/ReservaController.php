@@ -106,6 +106,7 @@ class ReservaController extends AbstractController
     {
         //Solución no elegante por falta de tiempo.
         $reserva = new Reserva();
+        $errors = [];
         if($request->query->has('fecha_inicio') != null && $this->checkdate($request->query->get('fecha_inicio')))
         {   
             if($request->query->has('fecha_fin') != null && $this->checkdate($request->query->get('fecha_fin'))){
@@ -117,40 +118,28 @@ class ReservaController extends AbstractController
                     $reserva->setFechaFin($ffDate);
                     $reserva->setFechaInicio($iiDate);
                 }else{
-                    throw $this->createNotFoundException(
-                        'Fecha de fin no puede ser inferior o igual a la fecha de inicio.'
-                    );                    
+                    $errors[]= 'Fecha de fin no puede ser inferior o igual a la fecha de inicio.';                  
                 }
             }else{
-                throw $this->createNotFoundException(
-                    'Fecha de fin no válida.'
-                );
+                $errors[]= 'Fecha de fin no válida.';
             }
         }else{
-            throw $this->createNotFoundException(
-                'Fecha de inicio no válida.'
-            );
+            $errors[]= 'Fecha de inicio no válida.';
         }
         if($request->query->has('huespedes') != null && is_numeric($request->query->get('huespedes'))){
             $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
         }else{
-            throw $this->createNotFoundException(
-                'Número de huéspedes no válido.'
-            );
+            $errors[]= 'Número de huéspedes no válido.';
         }
         if($request->query->has('habitacion_id') != null && is_numeric($request->query->get('habitacion_id'))){
             $habitacion = $this->getDoctrine()
             ->getRepository(Habitacion::class)
             ->find($request->query->get('habitacion_id'));
             if (!$habitacion) {
-                throw $this->createNotFoundException(
-                    'Habitación no encontrada'
-                );
+                $error[]= 'Habitación no encontrada';
             }else $reserva->setHabitacion($habitacion);
         }else{
-            throw $this->createNotFoundException(
-                'Habitación no válida.'
-            );
+            $errors[]= 'Habitación no válida.';
         }
         $form = $this->createForm(ReservaType::class, $reserva);
         $form->handleRequest($request);
@@ -171,9 +160,7 @@ class ReservaController extends AbstractController
                 $reservaRepository->add($reserva, true);
                 return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
             }else{
-                throw $this->createNotFoundException(
-                    'Habitación no disponible.'
-                );
+                $errors[]='Habitación no disponible.';
             }
             
         }
@@ -181,6 +168,7 @@ class ReservaController extends AbstractController
         return $this->renderForm('reserva/new.html.twig', [
             'reserva' => $reserva,
             'form' => $form,
+            'errors' => $errors,
         ]);
     }
 

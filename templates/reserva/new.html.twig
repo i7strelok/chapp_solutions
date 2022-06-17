@@ -5,8 +5,8 @@
     <script src="/js/js-datepicker.js"></script>
 {% endblock %}
 {% block body %}
-    {% for message in app.flashes('exito') %}
-        <div class="alert alert-success">
+    {% for message in errors %}
+        <div class="alert alert-danger">
             {{ message }}
         </div>
     {% endfor %}
