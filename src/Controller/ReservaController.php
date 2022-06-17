@@ -139,7 +139,7 @@ class ReservaController extends AbstractController
                 if($room->getId() == $reserva->getHabitacion()->getId()) $isAvailable = true;
             }
             if ($isAvailable) {
-                $reserva->setLocalizador('CHKSAAKSD3');
+                $reserva->setLocalizador(uniqid());
                 $reservaRepository->add($reserva, true);
                 return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
             }else{
@@ -190,10 +190,6 @@ class ReservaController extends AbstractController
         }
 
         return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-    private function generateReservationNumber(){
-        return 'CH'.date("mdHis").'-'.rand(1, 1000);
     }
 
     private function checkdate($date) {
