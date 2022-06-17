@@ -54,7 +54,7 @@ class ReservaController extends AbstractController
             $fecha_fin = strval(date("d/m/Y", strtotime(date('d-m-Y')."+ 7 days")));
         } 
         if($request->query->has('huespedes') != null){
-            if(is_numeric($request->query->get('huespedes'))){  
+            if(is_numeric($request->query->get('huespedes')) && $request->query->get('huespedes') > 0){  
                 $huespedes = $request->query->get('huespedes');
             }else{
                 $errors[]='Huéspedes debe ser un valor numérico.';
@@ -126,12 +126,14 @@ class ReservaController extends AbstractController
         }else{
             $errors[]= 'Fecha de inicio no válida.';
         }
-        if($request->query->has('huespedes') != null && is_numeric($request->query->get('huespedes'))){
+        if($request->query->has('huespedes') != null && is_numeric($request->query->get('huespedes')) &&
+        $request->query->get('huespedes') > 0){
             $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
         }else{
             $errors[]= 'Número de huéspedes no válido.';
         }
-        if($request->query->has('habitacion_id') != null && is_numeric($request->query->get('habitacion_id'))){
+        if($request->query->has('habitacion_id') != null && is_numeric($request->query->get('habitacion_id')) &&
+            $request->query->get('habitacion_id') > 0){
             $habitacion = $this->getDoctrine()
             ->getRepository(Habitacion::class)
             ->find($request->query->get('habitacion_id'));
