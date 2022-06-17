@@ -114,12 +114,11 @@ class ReservaController extends AbstractController
             $habitacion = $this->getDoctrine()
             ->getRepository(Habitacion::class)
             ->find($request->query->get('habitacion_id'));
-            $reserva->setHabitacion($habitacion);
             if (!$habitacion) {
                 throw new \Exception(
                     'Habitación no encontrada'
                 );
-            }
+            }else $reserva->setHabitacion($habitacion);
         }else{
             throw new \Exception(
                 'Habitación no válida.'
