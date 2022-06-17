@@ -33,7 +33,7 @@ class Reserva
     #[Assert\NotBlank()]
     private $cliente;
 
-    #[ORM\Column(type: 'string', length: 12)]
+    #[ORM\Column(type: 'string', length: 13, unique:true)]
     private $localizador;
 
     #[ORM\ManyToOne(targetEntity: Habitacion::class, inversedBy: 'reservas')]
