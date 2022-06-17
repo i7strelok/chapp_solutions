@@ -78,35 +78,28 @@ class ReservaController extends AbstractController
     public function new(Request $request, ReservaRepository $reservaRepository): Response
     {
         $reserva = new Reserva();
-        if($request->query->has('fecha_inicio') != null && $this->checkdate($request->query->get('fecha_inicio')))
-        {   
-            if($request->query->has('fecha_fin') != null && $this->checkdate($request->query->get('fecha_fin'))){
-                $iDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_inicio'));
-                $iiDate = \DateTime::createFromFormat('Y-m-d', $iDate->format('Y-m-d'));
-                $fDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_fin'));
-                $ffDate = \DateTime::createFromFormat('Y-m-d', $fDate->format('Y-m-d'));
-                if (strtotime($fDate->format('Y-m-d')) > strtotime($iDate->format('Y-m-d'))) {
-                    $reserva->setFechaFin($ffDate);
-                    $reserva->setFechaInicio($iiDate);
-                }else{
-                    throw new \Exception(
-                        'Fecha de fin no puede ser inferior o igual a la fecha de inicio.'
-                    );                    
-                }
-            }else{
-                throw new \Exception(
-                    'Fecha de fin no válida.'
-                );
-            }
+        if($request->query->has('fecha_inicio') != null && $this->checkdate($request->query->get('fecha_inicio'))){
+            $iDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_inicio'));
+            $iiDate = \DateTime::createFromFormat('Y-m-d', $iDate->format('Y-m-d'));
+            $reserva->setFechaInicio($iiDate);     
         }else{
-            throw new \Exception(
+            throw $this->createNotFoundException(
                 'Fecha de inicio no válida.'
+            );
+        }
+        if($request->query->has('fecha_fin') != null && $this->checkdate($request->query->get('fecha_fin'))){
+            $fDate = \DateTime::createFromFormat('d/m/Y', $request->query->get('fecha_fin'));
+            $ffDate = \DateTime::createFromFormat('Y-m-d', $fDate->format('Y-m-d'));
+            $reserva->setFechaFin($ffDate);
+        }else{
+            throw $this->createNotFoundException(
+                'Fecha de fin no válida.'
             );
         }
         if($request->query->has('huespedes') != null && is_numeric($request->query->get('huespedes'))){
             $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
         }else{
-            throw new \Exception(
+            throw $this->createNotFoundException(
                 'Número de huéspedes no válido.'
             );
         }
@@ -114,13 +107,14 @@ class ReservaController extends AbstractController
             $habitacion = $this->getDoctrine()
             ->getRepository(Habitacion::class)
             ->find($request->query->get('habitacion_id'));
+            $reserva->setHabitacion($habitacion);
             if (!$habitacion) {
-                throw new \Exception(
+                throw $this->createNotFoundException(
                     'Habitación no encontrada'
                 );
-            }else $reserva->setHabitacion($habitacion);
+            }
         }else{
-            throw new \Exception(
+            throw $this->createNotFoundException(
                 'Habitación no válida.'
             );
         }
@@ -131,23 +125,9 @@ class ReservaController extends AbstractController
             isSubmitted() comprueba si se ha enviado.
         */
         if ($form->isSubmitted() && $form->isValid()) {
-            $availableRooms = $this->getDoctrine()
-            ->getRepository(Habitacion::class)->getAvailableRooms($reserva->getFechaInicio(), $reserva->getFechaFin(), $reserva->getNumeroHuespedes(), "")
-            ->getResult();
-            $isAvailable = false;
-            foreach($availableRooms as $room){
-                if($room->getId() == $reserva->getHabitacion()->getId()) $isAvailable = true;
-            }
-            if ($isAvailable) {
-                $reserva->setLocalizador($this->generateReservationNumber());
-                $reservaRepository->add($reserva, true);
-                return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
-            }else{
-                throw new \Exception(
-                    'Habitación no disponible.'
-                );
-            }
-            
+            $reserva->setLocalizador($this->generateReservationNumber());
+            $reservaRepository->add($reserva, true);
+            return $this->redirectToRoute('app_reserva_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('reserva/new.html.twig', [
