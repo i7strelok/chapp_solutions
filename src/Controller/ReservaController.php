@@ -57,7 +57,7 @@ class ReservaController extends AbstractController
             if(is_numeric($request->query->get('huespedes')) && $request->query->get('huespedes') > 0){  
                 $huespedes = $request->query->get('huespedes');
             }else{
-                $errors[]='Huéspedes debe ser un valor numérico.';
+                $errors[]='Huéspedes debe ser un valor numérico mayor o igual a 1.';
             }
         }else{
             $huespedes = 2;
@@ -127,10 +127,10 @@ class ReservaController extends AbstractController
             $errors[]= 'Fecha de inicio no válida.';
         }
         if($request->query->has('huespedes') != null && is_numeric($request->query->get('huespedes')) &&
-        $request->query->get('huespedes') > 0){
+            $request->query->get('huespedes') > 0){
             $reserva->setNumeroHuespedes($request->query->get('huespedes')); 
         }else{
-            $errors[]= 'Número de huéspedes no válido.';
+            $errors[]= 'Número de huéspedes no válido. Debe ser numérico mayor o igual a 1.';
         }
         if($request->query->has('habitacion_id') != null && is_numeric($request->query->get('habitacion_id')) &&
             $request->query->get('habitacion_id') > 0){

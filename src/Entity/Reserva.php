@@ -18,14 +18,18 @@ class Reserva
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotBlank()]
+    #[Assert\GreaterThanOrEqual(value: 'today')]
     private $fecha_inicio;
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotBlank()]
+    #[Assert\Expression('this.getFechaFin() >= this.getFechaInicio()', message:'Fecha fin debe ser superior a fecha inicio')]
     private $fecha_fin;
 
     #[ORM\Column(type: 'smallint')]
     #[Assert\NotBlank()]
+    #[Assert\GreaterThanOrEqual(value: 1, message: 'El nº de huéspedes mínimo es de 1.')]
+    #[Assert\LessThanOrEqual(value: 4, message: 'El Nº de huéspedes máximo es de 4.')]
     private $numero_huespedes;
 
     #[ORM\ManyToOne(targetEntity: Cliente::class, inversedBy: 'reservas')]

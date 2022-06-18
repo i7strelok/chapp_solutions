@@ -18,6 +18,8 @@ class Habitacion
 
     #[ORM\Column(type: 'smallint')]
     #[Assert\NotBlank()]
+    #[Assert\GreaterThanOrEqual(value: 1, message: 'El Nº de la habitación debe ser superior o igual a 1')]
+    #[Assert\LessThanOrEqual(value: 1000, message: 'El Nº de la habitación indicado es demasiado grande')]
     private $numero;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -26,6 +28,8 @@ class Habitacion
 
     #[ORM\Column(type: 'smallint')]
     #[Assert\NotBlank()]
+    #[Assert\GreaterThanOrEqual(value: 1, message: 'La capacidad debe ser superior o igual a 1')]
+    #[Assert\LessThanOrEqual(value: 4, message: 'La capacidad no puede ser superior a 4')]
     private $capacidad;
 
     #[ORM\Column(type: 'float', precision: 5, scale: 2)]
