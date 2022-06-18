@@ -34,6 +34,8 @@ class Habitacion
 
     #[ORM\Column(type: 'float', precision: 5, scale: 2)]
     #[Assert\NotBlank()]
+    #[Assert\GreaterThanOrEqual(value: 1, message: 'El precio debe ser superior o igual a 1')]
+    #[Assert\LessThanOrEqual(value: 1000, message: 'El precio no puede ser superior a 1000')]
     private $precio_diario;
 
     #[ORM\ManyToMany(targetEntity: Etiqueta::class, inversedBy: 'habitaciones')]
